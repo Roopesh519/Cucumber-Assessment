@@ -46,7 +46,7 @@ So that I can access the application's features
 
     When I enter the 6-digit OTP for validation
     And I click on the "Verify OTP" button
-    And I should see the "verify OTP" button text updated to "verified"
+    And I should see the "verify phone number" button text updated to "verified"
     
 
   Scenario: Invalid OTP for phone number
