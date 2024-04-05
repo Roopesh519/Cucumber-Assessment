@@ -32,7 +32,7 @@ So that I can access the application's features
   Scenario: Validate phone number without entering basic details
     Given I am on the registration page
     When I enter my phone number starting with code +91 followed by a 10-digit number
-    And I click on the "verify phone number" button
+    And I click on the "verify_phone_number" button
     Then I should see a popup message saying "First, Middle and Last names are empty" 
 
 
@@ -40,32 +40,30 @@ So that I can access the application's features
     Given I am on the registration page
     When I enter valid first, middle, and last names
     And I enter my phone number starting with code +91 followed by a 10-digit number
-    And I click on the "verify phone number" button
+    And I click on the "verify_phone_number" button
     Then I should see a popup message saying "OTP sent successfully"
     And the option to resend OTP should be activated after 3 minutes 
-
     When I enter the 6-digit OTP for validation
-    And I click on the "Verify OTP" button
-    And I should see the "verify phone number" button text updated to "verified"
+    And I click on the "Verify_OTP" button
+    And I should see the "verify_phone_number" button text updated to "verified"
     
 
   Scenario: Invalid OTP for phone number
     Given I am on the registration page
     When I enter valid first, middle, and last names
     And I enter my phone number starting with code +91 followed by a 10-digit number
-    And I click on the "verify Phone number" button
+    And I click on the "verify_phone_number" button
     Then I should see a popup message saying "OTP sent successfully"
     And the option to resend OTP should be activated after 3 minutes 
-
     When I enter the invalid 6-digit OTP for validation
-    And I click on the "Verify OTP" button
+    And I click on the "Verify_OTP" button
     Then I should receive message "Invalid OTP"
     
 
   Scenario: Validate email address without entering basic details
     Given I am on the registration page
     When I enter my phone number starting with code +91 followed by a 10-digit number
-    And I click on the "verify phone number" button
+    And I click on the "verify_phone_number" button
     Then I should see a popup message saying "First, Middle and Last names are empty" 
     
     
@@ -73,12 +71,12 @@ So that I can access the application's features
     Given I am on the registration page
     When I enter valid first, middle, and last names
     And I enter a valid email address
-    And I click on the "Verify Email" button
+    And I click on the "Verify_Email" button
     Then I should see a popup message saying "OTP sent successfully"
     And the option to resend OTP should be activated after 3 minutes
 
     When I enter the 6-digit OTP for validation
-    And I click on the "Verify OTP" button
+    And I click on the "Verify_OTP" button
     Then I should see the change "Verify Email" button to "verified"
 
 
@@ -86,25 +84,25 @@ So that I can access the application's features
     Given I am on the registration page
     When I enter valid first, middle and last names
     And I enter a valid email address
-    And I click on the "Verify Email" button
+    And I click on the "Verify_Email" button
     Then I should see a popup message saying "OTP sent successfully"
     And the option to resend OTP should be activated after 3 minutes
     
     When I enter the invalid 6-digit OTP for validation
-    And I click on the "Verify OTP" button
+    And I click on the "Verify_OTP" button
     Then I should see the message "Invalid OTP"
 
 
   Scenario: User registration with existing email 
     Given I am on the registration page
     When I enter already existing "Email "
-    And I click on the "Verify Email" button
+    And I click on the "Verify_Email" button
     Then I should receive an error message "Email Already Exists"
 
   Scenario: User registration with existing phone Number  
     Given I am on the registration page
     When I enter existing "Phone Number"
-    And I click on the "Verify Phone Number" button
+    And I click on the "verify_phone number" button
     Then I should receive an error message "Phone Number Already Exists"
     
   Scenario: User registration with existing username  
@@ -119,13 +117,398 @@ So that I can access the application's features
     When I enter my valid basic details
     And I enter valid email 
     And I enter valid phone number
-    And I click on verify email 
+    And I click on "Verify_Email" button
     And I enter valid OTP and verify
-    Then I should see "verify email" text to be changed to "Verified"
+    Then I should see "Verify_Email" text to be changed to "Verified"
 	
-    When I click on verify phone 
+    When I click on verify_phone 
     And I enter valid OTP and verify
-    Then I should see "verify email" text to be changed to "Verified"
+    Then I should see "verify_email" text to be changed to "Verified"
+    And I click on the "Register" button
+    
+    Then I should receive a "registersation successful" message
+    And I should receive a message saying "Verification mail sent to registered email"
+
+
+
+    And the option to resend OTP should be activated after 3 minutes 
+    When I enter the invalid 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should receive message "Invalid OTP"
+    
+
+  Scenario: Validate email address without entering basic details
+    Given I am on the registration page
+    When I enter my phone number starting with code +91 followed by a 10-digit number
+    And I click on the "verify_phone_number" button
+    Then I should see a popup message saying "First, Middle and Last names are empty" 
+    
+    
+  Scenario: Validate email address with OTP
+    Given I am on the registration page
+    When I enter valid first, middle, and last names
+    And I enter a valid email address
+    And I click on the "Verify_Email" button
+    Then I should see a popup message saying "OTP sent successfully"
+    And the option to resend OTP should be activated after 3 minutes
+
+    When I enter the 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should see the change "Verify Email" button to "verified"
+
+
+  Scenario: Invalid OTP for email
+    Given I am on the registration page
+    When I enter valid first, middle and last names
+    And I enter a valid email address
+    And I click on the "Verify_Email" button
+    Then I should see a popup message saying "OTP sent successfully"
+    And the option to resend OTP should be activated after 3 minutes
+    
+    When I enter the invalid 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should see the message "Invalid OTP"
+
+
+  Scenario: User registration with existing email 
+    Given I am on the registration page
+    When I enter already existing "Email "
+    And I click on the "Verify_Email" button
+    Then I should receive an error message "Email Already Exists"
+
+  Scenario: User registration with existing phone Number  
+    Given I am on the registration page
+    When I enter existing "Phone Number"
+    And I click on the "verify_phone number" button
+    Then I should receive an error message "Phone Number Already Exists"
+    
+    And the option to resend OTP should be activated after 3 minutes 
+    When I enter the invalid 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should receive message "Invalid OTP"
+    
+
+  Scenario: Validate email address without entering basic details
+    Given I am on the registration page
+    When I enter my phone number starting with code +91 followed by a 10-digit number
+    And I click on the "verify_phone_number" button
+    Then I should see a popup message saying "First, Middle and Last names are empty" 
+    
+    
+  Scenario: Validate email address with OTP
+    Given I am on the registration page
+    When I enter valid first, middle, and last names
+    And I enter a valid email address
+    And I click on the "Verify_Email" button
+    Then I should see a popup message saying "OTP sent successfully"
+    And the option to resend OTP should be activated after 3 minutes
+
+    When I enter the 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should see the change "Verify Email" button to "verified"
+
+
+  Scenario: Invalid OTP for email
+    Given I am on the registration page
+    When I enter valid first, middle and last names
+    And I enter a valid email address
+    And I click on the "Verify_Email" button
+    Then I should see a popup message saying "OTP sent successfully"
+    And the option to resend OTP should be activated after 3 minutes
+    
+    When I enter the invalid 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should see the message "Invalid OTP"
+
+
+  Scenario: User registration with existing email 
+    Given I am on the registration page
+    When I enter already existing "Email "
+    And I click on the "Verify_Email" button
+    Then I should receive an error message "Email Already Exists"
+
+  Scenario: User registration with existing phone Number  
+    Given I am on the registration page
+    When I enter existing "Phone Number"
+    And I click on the "verify_phone number" button
+    Then I should receive an error message "Phone Number Already Exists"
+    
+  Scenario: User registration with existing username  
+    Given I am on the registration page
+    When I enter existing "Username"
+    Then I should receive an error message "Username Already Exists"
+
+ #happy
+ 
+ Scenario: User valid registration                 
+    Given I am on the registration page
+    When I enter my valid basic details
+    And I enter valid email 
+    And I enter valid phone number
+    And I click on "Verify_Email" button
+    And I enter valid OTP and verify
+    Then I should see "Verify_Email" text to be changed to "Verified"
+	
+    And the option to resend OTP should be activated after 3 minutes 
+    When I enter the invalid 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should receive message "Invalid OTP"
+    
+
+  Scenario: Validate email address without entering basic details
+    Given I am on the registration page
+    When I enter my phone number starting with code +91 followed by a 10-digit number
+    And I click on the "verify_phone_number" button
+    Then I should see a popup message saying "First, Middle and Last names are empty" 
+    
+    
+  Scenario: Validate email address with OTP
+    Given I am on the registration page
+    When I enter valid first, middle, and last names
+    And I enter a valid email address
+    And I click on the "Verify_Email" button
+    Then I should see a popup message saying "OTP sent successfully"
+    And the option to resend OTP should be activated after 3 minutes
+
+    When I enter the 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should see the change "Verify Email" button to "verified"
+
+
+  Scenario: Invalid OTP for email
+    Given I am on the registration page
+    When I enter valid first, middle and last names
+    And I enter a valid email address
+    And I click on the "Verify_Email" button
+    Then I should see a popup message saying "OTP sent successfully"
+    And the option to resend OTP should be activated after 3 minutes
+    
+    When I enter the invalid 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should see the message "Invalid OTP"
+
+
+  Scenario: User registration with existing email 
+    Given I am on the registration page
+    When I enter already existing "Email "
+    And I click on the "Verify_Email" button
+    Then I should receive an error message "Email Already Exists"
+
+  Scenario: User registration with existing phone Number  
+    Given I am on the registration page
+    When I enter existing "Phone Number"
+    And I click on the "verify_phone number" button
+    Then I should receive an error message "Phone Number Already Exists"
+    
+  Scenario: User registration with existing username  
+    Given I am on the registration page
+    When I enter existing "Username"
+    Then I should receive an error message "Username Already Exists"
+
+ #happy
+ 
+ Scenario: User valid registration                 
+    Given I am on the registration page
+    And the option to resend OTP should be activated after 3 minutes 
+    When I enter the invalid 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should receive message "Invalid OTP"
+    
+
+  Scenario: Validate email address without entering basic details
+    Given I am on the registration page
+    When I enter my phone number starting with code +91 followed by a 10-digit number
+    And I click on the "verify_phone_number" button
+    Then I should see a popup message saying "First, Middle and Last names are empty" 
+    
+    
+  Scenario: Validate email address with OTP
+    Given I am on the registration page
+    When I enter valid first, middle, and last names
+    And I enter a valid email address
+    And I click on the "Verify_Email" button
+    Then I should see a popup message saying "OTP sent successfully"
+    And the option to resend OTP should be activated after 3 minutes
+
+    When I enter the 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should see the change "Verify Email" button to "verified"
+
+
+  Scenario: Invalid OTP for email
+    Given I am on the registration page
+    When I enter valid first, middle and last names
+    And I enter a valid email address
+    And I click on the "Verify_Email" button
+    Then I should see a popup message saying "OTP sent successfully"
+    And the option to resend OTP should be activated after 3 minutes
+    
+    When I enter the invalid 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should see the message "Invalid OTP"
+
+
+  Scenario: User registration with existing email 
+    Given I am on the registration page
+    When I enter already existing "Email "
+    And I click on the "Verify_Email" button
+    Then I should receive an error message "Email Already Exists"
+
+  Scenario: User registration with existing phone Number  
+    Given I am on the registration page
+    When I enter existing "Phone Number"
+    And I click on the "verify_phone number" button
+    Then I should receive an error message "Phone Number Already Exists"
+    
+  Scenario: User registration with existing username  
+    Given I am on the registration page
+    When I enter existing "Username"
+    Then I should receive an error message "Username Already Exists"
+
+ #happy
+ 
+ Scenario: User valid registration                 
+    Given I am on the registration page
+    When I enter my valid basic details
+    And I enter valid email 
+    And I enter valid phone number
+    And I click on "Verify_Email" button
+    And I enter valid OTP and verify
+    Then I should see "Verify_Email" text to be changed to "Verified"
+	
+    When I click on verify_phone 
+    And I enter valid OTP and verify
+    And the option to resend OTP should be activated after 3 minutes 
+    When I enter the invalid 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should receive message "Invalid OTP"
+    
+
+  Scenario: Validate email address without entering basic details
+    Given I am on the registration page
+    When I enter my phone number starting with code +91 followed by a 10-digit number
+    And I click on the "verify_phone_number" button
+    Then I should see a popup message saying "First, Middle and Last names are empty" 
+    
+    
+  Scenario: Validate email address with OTP
+    Given I am on the registration page
+    When I enter valid first, middle, and last names
+    And I enter a valid email address
+    And I click on the "Verify_Email" button
+    Then I should see a popup message saying "OTP sent successfully"
+    And the option to resend OTP should be activated after 3 minutes
+
+    When I enter the 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should see the change "Verify Email" button to "verified"
+
+
+  Scenario: Invalid OTP for email
+    Given I am on the registration page
+    When I enter valid first, middle and last names
+    And I enter a valid email address
+    And I click on the "Verify_Email" button
+    Then I should see a popup message saying "OTP sent successfully"
+    And the option to resend OTP should be activated after 3 minutes
+    
+    When I enter the invalid 6-digit OTP for validation
+    And I click on the "Verify_OTP" button
+    Then I should see the message "Invalid OTP"
+
+
+  Scenario: User registration with existing email 
+    Given I am on the registration page
+    When I enter already existing "Email "
+    And I click on the "Verify_Email" button
+    Then I should receive an error message "Email Already Exists"
+
+  Scenario: User registration with existing phone Number  
+    Given I am on the registration page
+    When I enter existing "Phone Number"
+    And I click on the "verify_phone number" button
+    Then I should receive an error message "Phone Number Already Exists"
+    
+  Scenario: User registration with existing username  
+    Given I am on the registration page
+    When I enter existing "Username"
+    Then I should receive an error message "Username Already Exists"
+
+ #happy
+ 
+ Scenario: User valid registration                 
+    Given I am on the registration page
+    When I enter my valid basic details
+    And I enter valid email 
+    And I enter valid phone number
+    And I click on "Verify_Email" button
+    And I enter valid OTP and verify
+    Then I should see "Verify_Email" text to be changed to "Verified"
+	
+    When I click on verify_phone 
+    And I enter valid OTP and verify
+    Then I should see "verify_email" text to be changed to "Verified"
+    And I click on the "Register" button
+    
+    Then I should receive a "registersation successful" message
+    And I should receive a message saying "Verification mail sent to registered email"
+
+
+
+    Then I should see "verify_email" text to be changed to "Verified"
+    And I click on the "Register" button
+    
+    Then I should receive a "registersation successful" message
+    And I should receive a message saying "Verification mail sent to registered email"
+
+
+
+    When I enter my valid basic details
+    And I enter valid email 
+    And I enter valid phone number
+    And I click on "Verify_Email" button
+    And I enter valid OTP and verify
+    Then I should see "Verify_Email" text to be changed to "Verified"
+	
+    When I click on verify_phone 
+    And I enter valid OTP and verify
+    Then I should see "verify_email" text to be changed to "Verified"
+    And I click on the "Register" button
+    
+    Then I should receive a "registersation successful" message
+    And I should receive a message saying "Verification mail sent to registered email"
+
+
+
+    When I click on verify_phone 
+    And I enter valid OTP and verify
+    Then I should see "verify_email" text to be changed to "Verified"
+    And I click on the "Register" button
+    
+    Then I should receive a "registersation successful" message
+    And I should receive a message saying "Verification mail sent to registered email"
+
+
+
+  Scenario: User registration with existing username  
+    Given I am on the registration page
+    When I enter existing "Username"
+    Then I should receive an error message "Username Already Exists"
+
+ #happy
+ 
+ Scenario: User valid registration                 
+    Given I am on the registration page
+    When I enter my valid basic details
+    And I enter valid email 
+    And I enter valid phone number
+    And I click on "Verify_Email" button
+    And I enter valid OTP and verify
+    Then I should see "Verify_Email" text to be changed to "Verified"
+	
+    When I click on verify_phone 
+    And I enter valid OTP and verify
+    Then I should see "verify_email" text to be changed to "Verified"
     And I click on the "Register" button
     
     Then I should receive a "registersation successful" message
