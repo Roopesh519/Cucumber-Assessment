@@ -17,8 +17,8 @@ So that I can access the application's features
 
   Examples:
   | first_name | middle_name | last_name | username | email            | message                                       |
-  |            | Patel       | Singh     | user_283 | bharath@gmail.com| First name required /Invalid                  |   	#first name
-  | priya      |             | Sharma    |          | abc@example.com  | middle name required /Invalid                 |    #middle name
+  |            | Patel       | Singh     | user_283 | bharath@gmail.com| First name required /Invalid                  |  #first name
+  | priya      |             | Sharma    |          | abc@example.com  | middle name required /Invalid                 |  #middle name
   | Siddharth  | Kumar       |           | user_123 | xyz@example.com  | Last name required /Invalid                   |	#last name
   |            |             |           | user_456 | def@example.com  | First,Middle,Last name Required /Invalid data |	#f,m,l name
   |            |             |           |          |                  | Fields empty                                  |	#Empty fields
