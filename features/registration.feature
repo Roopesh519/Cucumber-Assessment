@@ -32,7 +32,7 @@ So that I can access the application's features
   Scenario: Validate phone number without entering basic details
     Given I am on the registration page
     When I enter my phone number starting with code +91 followed by a 10-digit number
-    And I click on the "verify_phone_number" button
+    And I click on "verify_phone_number" button
     Then I should see a popup message saying "First, Middle and Last names are empty" 
 
 
@@ -40,11 +40,11 @@ So that I can access the application's features
     Given I am on the registration page
     When I enter valid first, middle, and last names
     And I enter my phone number starting with code +91 followed by a 10-digit number
-    And I click on the "verify_phone_number" button
-    Then I should see a popup message saying "OTP sent successfully"
+    And I click on "verify_phone_number" button
+    Then I should see a popup message saying "OTP sent successfully to phone number"
     And the option to resend OTP should be activated after 3 minutes 
-    When I enter the 6-digit OTP for validation
-    And I click on the "Verify_OTP" button
+    When I enter the 6-digit OTP for "phno" validation 
+    And I click on "Verify_OTP" button
     And I should see the "verify_phone_number" button text updated to "verified"
     
 
@@ -52,18 +52,18 @@ So that I can access the application's features
     Given I am on the registration page
     When I enter valid first, middle, and last names
     And I enter my phone number starting with code +91 followed by a 10-digit number
-    And I click on the "verify_phone_number" button
-    Then I should see a popup message saying "OTP sent successfully"
+    And I click on "verify_phone_number" button
+    Then I should see a popup message saying "OTP sent successfully to phone number"
     And the option to resend OTP should be activated after 3 minutes 
-    When I enter the invalid 6-digit OTP for validation
-    And I click on the "Verify_OTP" button
-    Then I should receive message "Invalid OTP"
+    When I enter the invalid 6-digit OTP for "phno" validation
+    And I click on "Verify_OTP" button
+    Then I should see a popup message saying "Invalid OTP"
     
 
   Scenario: Validate email address without entering basic details
     Given I am on the registration page
     When I enter my phone number starting with code +91 followed by a 10-digit number
-    And I click on the "verify_phone_number" button
+    And I click on "verify_phone_number" button
     Then I should see a popup message saying "First, Middle and Last names are empty" 
     
     
@@ -71,12 +71,12 @@ So that I can access the application's features
     Given I am on the registration page
     When I enter valid first, middle, and last names
     And I enter a valid email address
-    And I click on the "Verify_Email" button
-    Then I should see a popup message saying "OTP sent successfully"
+    And I click on "Verify_Email" button
+    Then I should see a popup message saying "OTP sent successfully to email address"
     And the option to resend OTP should be activated after 3 minutes
 
-    When I enter the 6-digit OTP for validation
-    And I click on the "Verify_OTP" button
+    When I enter the 6-digit OTP for "email" validation 
+    And I click on "Verify_OTP" button
     Then I should see the change "Verify Email" button to "verified"
 
 
@@ -84,25 +84,25 @@ So that I can access the application's features
     Given I am on the registration page
     When I enter valid first, middle and last names
     And I enter a valid email address
-    And I click on the "Verify_Email" button
-    Then I should see a popup message saying "OTP sent successfully"
+    And I click on "Verify_Email" button
+    Then I should see a popup message saying "OTP sent successfully to email address"
     And the option to resend OTP should be activated after 3 minutes
     
-    When I enter the invalid 6-digit OTP for validation
-    And I click on the "Verify_OTP" button
-    Then I should see the message "Invalid OTP"
+    When I enter the invalid 6-digit OTP for "email" validation
+    And I click on "Verify_OTP" button
+    Then I should see a popup message saying "Invalid OTP"
 
 
   Scenario: User registration with existing email 
     Given I am on the registration page
-    When I enter already existing "Email "
-    And I click on the "Verify_Email" button
+    When I enter already existing "Email"
+    And I click on "Verify_Email" button
     Then I should see a popup message saying "Email Already Exists"
 
   Scenario: User registration with existing phone Number  
     Given I am on the registration page
     When I enter existing "Phone Number"
-    And I click on the "verify_phone number" button
+    And I click on "verify_phone number" button
     Then I should see a popup message saying "Phone Number Already Exists"
     
   Scenario: User registration with existing username  
@@ -118,16 +118,17 @@ So that I can access the application's features
     And I enter valid email 
     And I enter valid phone number
     And I click on "Verify_Email" button
-    And I enter valid OTP and verify
-    Then I should see "Verify_Email" text to be changed to "Verified"
+    And I enter valid OTP and verify "email"
+    Then I should see "Verify_email" text to be changed to "Verified"
 	
-    When I click on verify_phone 
-    And I enter valid OTP and verify
-    Then I should see "verify_email" text to be changed to "Verified"
-    And I click on the "Register" button
+    When I click on "Verify_phone" button 
+    And I enter valid OTP and verify "phone_number"
+    Then I should see "Verify_phone_number" text to be changed to "Verified"
+    And I click on "Register" button
     
-    Then I should receive a "registersation successful" message
-    And I should receive a message saying "Verification mail sent to registered email"
+    Then I should see a popup message saying "registersation successful"
+    And I should see a popup message saying "Verification mail sent to registered email"
+
 
 
 
