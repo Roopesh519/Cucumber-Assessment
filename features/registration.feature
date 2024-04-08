@@ -97,18 +97,18 @@ So that I can access the application's features
     Given I am on the registration page
     When I enter already existing "Email "
     And I click on the "Verify_Email" button
-    Then I should receive an error message "Email Already Exists"
+    Then I should see a popup message saying "Email Already Exists"
 
   Scenario: User registration with existing phone Number  
     Given I am on the registration page
     When I enter existing "Phone Number"
     And I click on the "verify_phone number" button
-    Then I should receive an error message "Phone Number Already Exists"
+    Then I should see a popup message saying "Phone Number Already Exists"
     
   Scenario: User registration with existing username  
     Given I am on the registration page
     When I enter existing "Username"
-    Then I should receive an error message "Username Already Exists"
+    Then I should see a popup message saying "Username Already Exists"
 
  #happy---------------------------------------
  
