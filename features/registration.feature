@@ -5,7 +5,7 @@ So that I can access the application's features
 
 #unhappy
 
-  Scenario: Register user with invalid or empty details 
+  Scenario Outline: Register user with invalid or empty details 
     Given I am on the registration page
     When I enter my First name as "<first_name>"
     And I enter my Middle name as "<middle_name>"
@@ -77,7 +77,7 @@ So that I can access the application's features
 
     When I enter the 6-digit OTP for "email" validation 
     And I click on "Verify_OTP" button
-    Then I should see the change "Verify Email" button to "verified"
+    Then I should see the "Verify Email" button text updated to "verified"
 
 
   Scenario: Invalid OTP for email
@@ -101,13 +101,13 @@ So that I can access the application's features
 
   Scenario: User registration with existing phone Number  
     Given I am on the registration page
-    When I enter existing "Phone Number"
+    When I enter already existing "Phone Number"
     And I click on "verify_phone number" button
     Then I should see a popup message saying "Phone Number Already Exists"
     
   Scenario: User registration with existing username  
     Given I am on the registration page
-    When I enter existing "Username"
+    When I enter already existing "Username"
     Then I should see a popup message saying "Username Already Exists"
 
  #happy---------------------------------------
@@ -119,11 +119,11 @@ So that I can access the application's features
     And I enter valid phone number
     And I click on "Verify_Email" button
     And I enter valid OTP and verify "email"
-    Then I should see "Verify_email" text to be changed to "Verified"
+    Then I should see the "Verify_email" button text updated to "Verified"
 	
     When I click on "Verify_phone" button 
     And I enter valid OTP and verify "phone_number"
-    Then I should see "Verify_phone_number" text to be changed to "Verified"
+    Then I should see the "Verify_phone_number" button text updated to "Verified"
     And I click on "Register" button
     
     Then I should see a popup message saying "registersation successful"
