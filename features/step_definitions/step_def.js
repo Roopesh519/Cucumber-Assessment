@@ -148,6 +148,8 @@ When('the option to resend OTP should be activated after 3 minutes',{ timeout: 3
     }
 });
 
+//document.getElementById("myP").style.visibility = "hidden";
+
 When('I enter the 6-digit OTP for validation', async function () {
   const otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="otp"]')));
   const otp = faker.random.numeric({ min: 100000, max: 999999 }).toString();   
