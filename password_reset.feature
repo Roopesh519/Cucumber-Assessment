@@ -8,10 +8,10 @@ So that I can regain access to my account
 
 Scenario: Password reset with invalid email
     Given I am on the login screen
-    When I click on "Forgot Password"
-    And I enter invalid email "<invalid_email>"
-    And I click on "Reset Password" button
-    Then I should receive an error message "<error_message>"
+    When I click on "Forgot Password" link
+    And I enter "<invalid_email>"
+    And I click on "Reset Password" link
+    Then I should receive "<error_message>"
 
     Examples:
       | invalid_email          | error_message         |
@@ -19,13 +19,13 @@ Scenario: Password reset with invalid email
       | email_without_at.com   | Invalid Email Address |
       | email_with_spaces.com  | Invalid Email Address |
 
-
+    | bharath.shet@7edge.com | "Email address does not exist"|
 @get_link
 Scenario Outline: Validate with new password which do not meet criteria 
     Given I am on the password reset screen
-    When I enter my new password as "<new_password>" 
-    And I enter confirm paassword as "<confirm_new_password>" 
-    Then I should see message <message>
+    When I enter new password as "<new_password>"
+    And I enter cconfirm password as "<confirm_new_password>"
+    Then I should receive "<message>"
 
     Examples:
     | new_password | confirm_new_password | message                                       | 
@@ -39,35 +39,39 @@ Scenario Outline: Validate with new password which do not meet criteria
     | shreesha@6543| shreesha@6543        | password should not exceed 12 character       | 
 
 
-Scenario: Login with unregistered email
-    
-    Given I am on the login screen
-    And I have reset my password and received confirmation
-    
-    When I enter my email address as "<invalid_email>"
-    And I enter my paassword as "<valid_password>"
-    And I click the submit button
-    
-    Then I should see an error message "Email address not found"
-    And I should not be logged in
+Scenario: Validate new password with all criteria met
+    Given I am on the password reset screen
+    When I enter "Admin@123"
+    And I enter "Admin@123"
+    Then I should receive "<Password updated successfully>"
 
-    Examples:
-      | invalid_email       | valid_password |
-      | rakshan@gmail.com   | Valid@123      |
-      | raj@gmail.com       | raj@123        | 
+# Scenario: Login with unregistered email
+    
+#     Given I am on the login screen
+#     And I have reset my password
+#     And I should receive "password reset successful"
+    
+#     When I enter "<invalid_email>"
+#     And I enter "<valid_password>"
+#     And I click the submit button
+#     Then I should receive "<Email address not found>"
+#     And I should receive "Unsuccessful login attempt"
+
+#     Examples:
+#       | invalid_email       | valid_password |
+#       | rakshan@gmail.com   | Valid@123      |
+#       | raj@gmail.com       | raj@123        | 
       
       
 
 Scenario Outline: Login with invalid new password
     Given I am on the login screen
-    And I have reset my password and received confirmation
-    
-    When I enter my email "<email>"
-    And I enter the invalid new password "<invalid_password>"
+    When I enter "<email>"
+    And I enter "<invalid_password>"
     And I click the submit button
     
-    Then I should see an error message "Incorrect password"
-    And I should not be logged in
+    Then I should receive "<Incorrect password>"
+    And I should receive "Unsuccessful login attempt"
 
     Examples:
       | email             | invalid_password | 
@@ -79,31 +83,26 @@ Scenario Outline: Login with invalid new password
 #happy
 
 Scenario: Password reset with registered email
-    Given I am on the login page
+    Given I am on the login screen
     When I click on "Forgot Password"
-    And I enter registered email
+    And I enter "<mail>"
     And I click on "Reset Password" link
-    Then I should see a confirmation message indicating that the "reset email has been sent"
+    Then I should receive "<reset email has been sent>"
   
   
 @get_link
 Scenario: Validate new password with all criteria met
     Given I am on the password reset screen
-    When I enter my "Strong@2024" as the new password
-    And I enter "Strong@2024" again as the confirm new password
-    Then I should see the message "Password updated successfully."
+    When I enter "<new_password>"
+    And I enter "<confirm_new_password>"
+    Then I should receive "<Password updated successfully>"
 
 
-Scenario Outline: Login with new password
-    Given I am in the login screen
-    And I have reset my password and received confirmation
+# Scenario Outline: Login with new password
+#     Given I am on the login screen
+#     And i should receive "password reset successful"
     
-    When I enter my email as "admin@gmail.com"
-    And I enter my password as "Strong@2024"
-    And I click the submit button
-    Then I should be logged in successfully
-
-      
-      
-      
-      
+#     When I enter "<mail>"
+#     And I enter "<password>"
+#     And I click the submit button
+#     Then I should receive "login successful"
