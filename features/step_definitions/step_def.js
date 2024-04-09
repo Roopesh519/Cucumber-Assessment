@@ -155,7 +155,7 @@ When('the option to resend OTP should be activated after 3 minutes',{ timeout: 3
 When('I enter the 6-digit OTP for validation', async function () {
   const otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="otp_input"]')));
   const otp = faker.random.number({ min: 100000, max: 999999 }).toString();   
-  await otpInput.clear();
+  await otpInput.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
   await otpInput.sendKeys(otp);
 });
 
@@ -201,7 +201,7 @@ When('I enter the invalid 6-digit OTP for {string} validation', async function (
     }
 
     const invalidOTP = faker.datatype.number({ min: 100000, max: 999999 }).toString(); 
-    await otpInput.clear();
+    await otpInput.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
     await otpInput.sendKeys(invalidOTP);
 });
 
@@ -240,7 +240,7 @@ When('I enter already existing {string}', async function (inputType) {
           return;
   }
   const existingData = faker.random.word(); 
-  await inputField.clear();
+  await inputField.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
   await inputField.sendKeys(existingData);
 });
 
