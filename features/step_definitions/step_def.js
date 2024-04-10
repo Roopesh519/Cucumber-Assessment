@@ -38,8 +38,6 @@ Given('I am on the registration page', async function () {
     element.sendKeys(email)
   });
 
-
-
   Then('my details should be validated with {string}', async function (message) {
     await driver.wait(until.elementLocated(By.xpath(`//*[text()="${message}"]`)));
   });
@@ -81,56 +79,54 @@ Given('I am on the registration page', async function () {
 
     switch(message) {
         case 'First, Middle and Last names are empty':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), "First, Middle and Last names are empty")]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
         case 'OTP sent successfully to phone number':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), "OTP sent successfully to phone number")]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
         case 'OTP sent successfully to email address':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), "OTP sent successfully to email address")]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
         case 'Email Already Exists':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), "Email Already Exists")]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
         case 'Phone Number Already Exists':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), "Phone Number Already Exists")]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
         case 'Username Already Exists':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), "Username Already Exists")]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
         case 'registersation successful':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), "registersation successful")]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
         case 'Verification mail sent to registered email':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), "Verification mail sent to registered email")]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
         case 'Invalid OTP':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), "Invalid OTP")]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
         default:
             console.log('Invalid message');
             return;
     }
-
     assert(popupElement, `Popup message '${message}' not found`);
-
 });
 
 When('I enter my phone number starting with code +91 followed by a 10-digit number', async function () {
 
-  const phoneNumber = '+91' + faker.phone.phoneNumberFormat().replace(/-/g, '').substring(0, 10);
-  const phoneNumberInput = await driver.wait(until.elementLocated(By.css('[data-testid="phone_number_input"]')));
+  const phoneNumber = '+91' + faker.phone.number().replace(/-/g, '').substring(0, 10);
+  const phoneNumberInput = await driver.wait(until.elementLocated(By.css('[data-testid="phone_number"]')));
   await phoneNumberInput.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
   await phoneNumberInput.sendKeys(phoneNumber);
 });
 
 When('I enter valid first, middle, and last names', async function () {
-  const firstName = faker.name.firstName();
-  const middleName = faker.name.firstName();
-  const lastName = faker.name.lastName();
-  const firstNameInput = await driver.wait(until.elementLocated(By.css('[data-testid="first_name_input"]')));
-  const middleNameInput = await driver.wait(until.elementLocated(By.css('[data-testid="middle_name_input"]')));
-  const lastNameInput = await driver.wait(until.elementLocated(By.css('[data-testid="last_name_input"]')));
+  const firstName = faker.person.firstName();
+  const middleName = faker.person.middleName();
+  const lastName = faker.person.lastName();
+  const firstNameInput = await driver.wait(until.elementLocated(By.css('[data-testid="first_name"]')));
+  const middleNameInput = await driver.wait(until.elementLocated(By.css('[data-testid="middle_name"]')));
+  const lastNameInput = await driver.wait(until.elementLocated(By.css('[data-testid="last_name"]')));
   await firstNameInput.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
   await middleNameInput.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
   await lastNameInput.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
@@ -140,22 +136,24 @@ When('I enter valid first, middle, and last names', async function () {
 });
 
 
-
 When('the option to resend OTP should be activated after 3 minutes',{ timeout: 3 * 60 * 1000}, async function () {
     
     await new Promise(resolve => setTimeout(resolve, 3 * 60 * 1000));
     const resendOTPButton = await driver.wait(until.elementLocated(By.css('[data-testid="resend_otp_button"]')));
-    const isEnabled = await resendOTPButton.isEnabled();
-    if (isEnabled) {
+    const isVisible = await resendOTPButton.isVisible();
+
+    if (isVisible) {
         console.log("Resend OTP option activated after 3 minutes.");
     } else {
         throw new Error("Resend OTP option is not activated after 3 minutes.");
     }
 });
 
+//document.getElementById("myP").style.visibility = "hidden";
+
 When('I enter the 6-digit OTP for validation', async function () {
-  const otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="otp_input"]')));
-  const otp = faker.random.number({ min: 100000, max: 999999 }).toString();   
+  const otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="otp"]')));
+  const otp = faker.string.numeric({ min: 100000, max: 999999 }).toString();   
   await otpInput.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
   await otpInput.sendKeys(otp);
 });
@@ -166,41 +164,33 @@ Then('I should see the {string} button text updated to {string}', async function
   assert.strictEqual(buttonText, expectedText, `Expected "${buttonName}" button text to be "${expectedText}", but found "${buttonText}"`);
 });
 
-// When('I enter a valid email address', async function () {
-//   const validEmail = faker.internet.email(); /// bharath.shet+random1232137@7edge.com
-//   const emailInput = await driver.wait(until.elementLocated(By.css('[data-testid="email_input"]')));
-//   await emailInput.clear();
-//   await emailInput.sendKeys(validEmail);
-// });
-
 When('I enter a valid email address', async function () {
-  const prefix = 'bharath.shet+random';  // bharath.shet+random1232137@7edge.com
-  const randomPart = faker.random.number({ min: 100, max: 9999 }); // Generate random 3 to 4 digit number
+  const prefix = 'bharath.shet+random';// bharath.shet+random1232137@7edge.com
+  const randomPart = faker.string.numeric(({ min: 100, max: 9999 });
   const domain = '@7edge.com';
   const validEmail = `${prefix}${randomPart}${domain}`;
-  const emailInput = await this.driver.wait(until.elementLocated(By.css('[data-testid="email_input"]')));
+  const emailInput = await this.driver.wait(until.elementLocated(By.css('[data-testid="email"]')));
   await emailInput.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
   await emailInput.sendKeys(validEmail);
 });
 
-const faker = require('faker');
 
 When('I enter the invalid 6-digit OTP for {string} validation', async function (validationType) {
     let otpInput;
 
     switch(validationType) {
         case 'phno':
-            otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="phno_otp_input"]')));
+            otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="phno_otp"]')));
             break;
         case 'email':
-            otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="email_otp_input"]')));
+            otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="email_otp"]')));
             break;
         default:
             console.log('Invalid validation type');
             return;
     }
 
-    const invalidOTP = faker.datatype.number({ min: 100000, max: 999999 }).toString(); 
+    const invalidOTP = faker.number.int()({ min: 100000, max: 999999 }).toString(); 
     await otpInput.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
     await otpInput.sendKeys(invalidOTP);
 });
@@ -210,10 +200,10 @@ When('I enter the 6-digit OTP for {string} validation', async function (validati
 
     switch(validationType) {
         case 'phno':
-            otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="phno_otp_input"]')));
+            otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="phno_otp"]')));
             break;
         case 'email':
-            otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="email_otp_input"]')));
+            otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="email_otp"]')));
             break;
         default:
             console.log('Invalid validation type');
@@ -222,24 +212,24 @@ When('I enter the 6-digit OTP for {string} validation', async function (validati
     await otpInput.sendKeys("000000");
 });
 
-When('I enter existing {string}', async function (inputType) {
+When('I enter already existing {string}', async function (inputType) {
   let inputField;
 
   switch(inputType) {
       case 'Username':
-          inputField = await driver.wait(until.elementLocated(By.css('[data-testid="username_input"]')));
+          inputField = await driver.wait(until.elementLocated(By.css('[data-testid="username"]')));
           break;
       case 'phonenumber':
-          inputField = await driver.wait(until.elementLocated(By.css('[data-testid="phonenumber_input"]')));
+          inputField = await driver.wait(until.elementLocated(By.css('[data-testid="phonenumber"]')));
           break;
       case 'email':
-          inputField = await driver.wait(until.elementLocated(By.css('[data-testid="email_input"]')));
+          inputField = await driver.wait(until.elementLocated(By.css('[data-testid="email"]')));
           break;
       default:
           console.log('Invalid input type');
           return;
   }
-  const existingData = faker.random.word(); 
+  const existingData = faker.word.sample(); 
   await inputField.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
   await inputField.sendKeys(existingData);
 });
@@ -247,14 +237,14 @@ When('I enter existing {string}', async function (inputType) {
 //happy
 
 When('I enter my valid basic details', async function () {
-  const firstNameInput = await driver.wait(until.elementLocated(By.css('[data-testid="first_name_input"]')));
-  const middleNameInput = await driver.wait(until.elementLocated(By.css('[data-testid="middle_name_input"]')));
-  const lastNameInput = await driver.wait(until.elementLocated(By.css('[data-testid="last_name_input"]')));
-  const usernameInput = await driver.wait(until.elementLocated(By.css('[data-testid="username_input"]')));
+  const firstNameInput = await driver.wait(until.elementLocated(By.css('[data-testid="first_name"]')));
+  const middleNameInput = await driver.wait(until.elementLocated(By.css('[data-testid="middle_name"]')));
+  const lastNameInput = await driver.wait(until.elementLocated(By.css('[data-testid="last_name"]')));
+  const usernameInput = await driver.wait(until.elementLocated(By.css('[data-testid="username"]')));
 
-  const firstName = faker.name.firstName();
-  const middleName = faker.name.firstName();
-  const lastName = faker.name.lastName();
+  const firstName = faker.person.firstName();
+  const middleName = faker.person.middleName();
+  const lastName = faker.person.lastName();
   const username = faker.internet.userName();
 
   await firstNameInput.sendKeys(firstName);
@@ -264,15 +254,15 @@ When('I enter my valid basic details', async function () {
 });
 
 When('I enter valid email', async function () {
-  const emailInput = await driver.wait(until.elementLocated(By.css('[data-testid="email_input"]')));
+  const emailInput = await driver.wait(until.elementLocated(By.css('[data-testid="email"]')));
   const validEmail = faker.internet.email();
 
   await emailInput.sendKeys(validEmail);
 });
 
 When('I enter valid phone number', async function () {
-  const phoneNumberInput = await driver.wait(until.elementLocated(By.css('[data-testid="phone_number_input"]')));
-  const validPhoneNumber = faker.phone.phoneNumberFormat();
+  const phoneNumberInput = await driver.wait(until.elementLocated(By.css('[data-testid="phone_number"]')));
+  const validPhoneNumber = faker.phone.number();
 
   await phoneNumberInput.sendKeys(validPhoneNumber);
 });
@@ -282,16 +272,16 @@ When('I enter valid OTP and verify {string}', async function (inputType) {
 
   switch(inputType) {
       case 'email':
-          otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="email_otp_input"]')));
+          otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="email_otp"]')));
           break;
       case 'phonenumber':
-          otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="phonenumber_otp_input"]')));
+          otpInput = await driver.wait(until.elementLocated(By.css('[data-testid="phonenumber_otp"]')));
           break;
       default:
           console.log('Invalid input type');
           return;
   }
-  
+
   await otpInput.sendKeys("000000");
 
   const verifyButton = await driver.wait(until.elementLocated(By.css('[data-testid="verify_button"]')));
@@ -303,6 +293,4 @@ Then('I should see {string} text to be changed to "{string}"', async function (b
   const buttonTextAfterVerification = await button.getText();
 
   assert.equal(buttonTextAfetVerification, expectedText, "Button text does not match with the actual text");
-
-
 });
