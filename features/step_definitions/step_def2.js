@@ -98,6 +98,9 @@ When('I should see a message {string}', async function (message) {
     assert(element, `Element with message '${message}' not found`);
 });
 
+// changed --------------------
+
+
 Then('I should see a message {string}', async function (messagePlaceholder) {
     let element;
 
