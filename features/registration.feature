@@ -43,7 +43,7 @@ So that I can access the application's features
     And I click on "verify_phone_number" button
     Then I should see a popup message saying "OTP sent successfully to phone number"
     And the option to resend OTP should be activated after 3 minutes 
-    When I enter the 6-digit OTP for "phno" validation 
+    When I enter the 6-digit OTP for "phone_number" validation 
     And I click on "Verify_OTP" button
     And I should see the "verify_phone_number" button text updated to "verified"
     
@@ -55,7 +55,7 @@ So that I can access the application's features
     And I click on "verify_phone_number" button
     Then I should see a popup message saying "OTP sent successfully to phone number"
     And the option to resend OTP should be activated after 3 minutes 
-    When I enter the invalid 6-digit OTP for "phno" validation
+    When I enter the invalid 6-digit OTP for "phone_number" validation
     And I click on "Verify_OTP" button
     Then I should see a popup message saying "Invalid OTP"
     
@@ -121,7 +121,7 @@ So that I can access the application's features
 
   Scenario: User registration with existing phone Number  
     Given I am on the registration page
-    When I enter already existing "Phone Number"
+    When I enter already existing "phone_number"
     And I click on "verify_phone number" button
     Then I should see a popup message saying "Phone Number Already Exists"
     
