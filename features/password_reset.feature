@@ -8,7 +8,7 @@ So that I can regain access to my account
 
 Scenario: Password reset with invalid email
     Given I am on the login screen
-    When I click on "Forgot Password"
+    When I click on "Forgot Password" button
     And I enter invalid email "<invalid_email>"
     And I click on "Reset Password" button
     Then I should receive an error message "<error_message>"
@@ -38,43 +38,28 @@ Scenario Outline: Validate with new password which do not meet criteria
     | Dev@987      | Dev@987              | password requires atleast 8 characters        |
     | shreesha@6543| shreesha@6543        | password should not exceed 12 character       | 
 
+Scenario: Validate new password with all criteria met
+    Given I am on the password reset screen
+    When I enter my "Strong@2024" as the new password
+    And I enter "Strong@2024" again as the confirm new password
+    Then I should see the message "Password updated successfully."
 
-Scenario: Login with unregistered email
-    
+Scenario Outline: Login with invalid credentials
     Given I am on the login screen
-    And I have reset my password and received confirmation
-    
-    When I enter my email address as "<invalid_email>"
-    And I enter my paassword as "<valid_password>"
+    When I enter my email as "<email>"
+    And I enter my password as "<password>"
     And I click the submit button
-    
-    Then I should see an error message "Email address not found"
-    And I should not be logged in
+    Then I should receive the message as "<message>"
 
     Examples:
-      | invalid_email       | valid_password |
-      | rakshan@gmail.com   | Valid@123      |
-      | raj@gmail.com       | raj@123        | 
-      
-      
-
-Scenario Outline: Login with invalid new password
-    Given I am on the login screen
-    And I have reset my password and received confirmation
-    
-    When I enter my email "<email>"
-    And I enter the invalid new password "<invalid_password>"
-    And I click the submit button
-    
-    Then I should see an error message "Incorrect password"
-    And I should not be logged in
-
-    Examples:
-      | email             | invalid_password | 
-      | ram@yahoo.com     | Invalid@123      | 
-      | pratham@7edge.com | WeakPassword     |
-      | admin@gmail.com   | 12345678         | 
-
+      | email             | password   | message                          |
+      | admin@gmail.com   | admin@123  | Incorrect password               |
+      | pratham 7edge.com | pratham@123| Incorrect email                  |
+      | prathvi@7edge.com | prathvi@123| Email doesn't exist              |
+      | ram@yahoo.com     | ram@123    | unregistered email               |
+      |                   | ram@123    | empty field                      |
+      | ram@yahoo.com     |            | empty field                      |
+      |                   |            | empty field                      |
 
 #happy
 
@@ -85,14 +70,6 @@ Scenario: Password reset with registered email
     And I click on "Reset Password" link
     Then I should see a confirmation message indicating that the "reset email has been sent"
   
-  
-@get_link
-Scenario: Validate new password with all criteria met
-    Given I am on the password reset screen
-    When I enter my "Strong@2024" as the new password
-    And I enter "Strong@2024" again as the confirm new password
-    Then I should see the message "Password updated successfully."
-
 
 Scenario Outline: Login with new password
     Given I am in the login screen
