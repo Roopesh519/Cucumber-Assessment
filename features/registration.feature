@@ -93,6 +93,26 @@ So that I can access the application's features
     Then I should see a popup message saying "Invalid OTP"
 
 
+ #happy---------------------------------------
+ 
+ Scenario: User valid registration                 
+    Given I am on the registration page
+    When I enter my valid basic details
+    And I enter a valid email address
+    And I enter valid phone number
+    And I click on "Verify_Email" button
+    And I enter valid OTP and verify "email"
+    Then I should see the "Verify_email" button text updated to "Verified"
+	
+    When I click on "Verify_phone" button 
+    And I enter valid OTP and verify "phone_number"
+    Then I should see the "Verify_phone_number" button text updated to "Verified"
+    And I click on "Register" button
+    
+    Then I should see a popup message saying "registersation successful"
+    And I should see a popup message saying "Verification mail sent to registered email"
+
+
   Scenario: User registration with existing email 
     Given I am on the registration page
     When I enter already existing "Email"
@@ -109,27 +129,4 @@ So that I can access the application's features
     Given I am on the registration page
     When I enter already existing "Username"
     Then I should see a popup message saying "Username Already Exists"
-
- #happy---------------------------------------
- 
- Scenario: User valid registration                 
-    Given I am on the registration page
-    When I enter my valid basic details
-    And I enter valid email 
-    And I enter valid phone number
-    And I click on "Verify_Email" button
-    And I enter valid OTP and verify "email"
-    Then I should see the "Verify_email" button text updated to "Verified"
-	
-    When I click on "Verify_phone" button 
-    And I enter valid OTP and verify "phone_number"
-    Then I should see the "Verify_phone_number" button text updated to "Verified"
-    And I click on "Register" button
-    
-    Then I should see a popup message saying "registersation successful"
-    And I should see a popup message saying "Verification mail sent to registered email"
-
-
-
-
    
