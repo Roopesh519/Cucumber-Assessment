@@ -41,9 +41,9 @@ Scenario Outline: Validate with new password which do not meet criteria
 
 Scenario: Validate new password with all criteria met
     Given I am on the password reset screen
-    When I enter "Admin@123"
-    And I enter "Admin@123"
-    Then I should receive "<Password updated successfully>"
+    When I enter new password as "Admin@123"
+    And I enter confirm new password as "Admin@1234"
+    Then I should receive message "Password updated successfully"
 
 
 # Scenario: Login with unregistered email
@@ -85,9 +85,9 @@ Scenario Outline: Login with invalid new password
 
 Scenario: Password reset with registered email
     Given I am on the login screen
-    When I click on "Forgot Password"
-    And I enter "<mail>"
-    And I click on "Reset Password" link
+    When I click on "Forgot Password" button
+    And I enter my email as "<mail>"
+    And I click on "Reset Password" button
     Then I should receive "<reset email has been sent>"
   
   

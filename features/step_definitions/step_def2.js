@@ -1,4 +1,5 @@
 const { Given } = require('cucumber');
+const faker = require('faker');
 
 Given('I am on the login screen', async function () {
   await this.driver.get('https://example.com/login');
@@ -18,95 +19,131 @@ When('I click on {string} button', async function (button) {
             buttonElement = await wait(until.elementLocated(By.css('[data-testid=Forgot_Password')));
             break;
         case 'Reset Password':
-            buttonElement = await wait(until.elementLocated(By.css('[data-testid=Reset Password')));
+            buttonElement = await wait(until.elementLocated(By.css('[data-testid=Reset_Password')));
             break;
         default:
             console.log('Invalid button text');
             return; 
     }
-
-    await linkElement.click();
+    await buttonElement.click();
 });
 
-When('I enter {string}', async function (input) {
+When('I enter my email as {string}', async function (invalid_email){
+    let element = await driver.wait(until.elementLocated(By.css('[data-testid="email"]')))
+    await driver.wait(until.elementIsVisible(element))
+    element.sendKeys(invalid_email)
+});
+
+When('I enter my new password as {string}', async function (newPassword) {
+    let passwordInput = await driver.wait(until.elementLocated(By.css('[data-testid="password"]')));
+    await driver.wait(until.elementIsVisible(passwordInput));
+    await passwordInput.sendKeys(newPassword);
+});
+
+When('I enter confirm password as {string}', async function (confirmPassword) {
+    let confirmPasswordInput = await driver.wait(until.elementLocated(By.css('[data-testid="confirm-password"]')));
+    await driver.wait(until.elementIsVisible(confirmPasswordInput));
+    await confirmPasswordInput.sendKeys(confirmPassword);
+});
+
+When('I enter new password as {string}', async function (newPassword) {
+    let passwordInput = await driver.wait(until.elementLocated(By.css('[data-testid="password"]')));
+    await driver.wait(until.elementIsVisible(passwordInput));
+    await passwordInput.sendKeys(newPassword);
+});
+
+When('I enter my password as {string}', async function (Password) {
+    let PasswordInput = await driver.wait(until.elementLocated(By.css('[data-testid="confirm-password"]')));
+    await driver.wait(until.elementIsVisible(PasswordInput));
+    await PasswordInput.sendKeys(Password);
+});
+
+const { When } = require('cucumber');
+const { By, until } = require('selenium-webdriver');
+const assert = require('assert');
+
+When('I should see a message {string}', async function (message) {
     let element;
 
-    switch(input) {
-        case '<invalid_email>':
-            element = await driver.findElement(By.css('[data-testid="invalid_email"]'));
-            await element.sendKeys(faker.internet.email());
+    switch(message) {
+        case 'Login in successful':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
-        case 'new_password':
-            element = await driver.findElement(By.css('[data-testid="new_password"]'));
-            await element.sendKeys(faker.internet.password());
+        case 'reset email has been sent':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
-        case '<confirm_new_password>':
-            element = await driver.findElement(By.css('[data-testid="confirm_new_password"]'));
-            await element.sendKeys(faker.internet.password());
+        case 'Password updated successfully':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
-        case '<valid_password>':
-            element = await driver.findElement(By.css('[data-testid="valid_password"]'));
-            await element.sendKeys(faker.internet.password());
-            break;
-        case '<email>':
-            element = await driver.findElement(By.css('[data-testid="email"]'));
-            await element.sendKeys(faker.internet.email());
-            break;
-        case '<invalid_password>':
-            element = await driver.findElement(By.css('[data-testid="invalid_password"]'));
-            await element.sendKeys(faker.internet.password());
-            break;
-        case '<mail>':
-            element = await driver.findElement(By.css('[data-testid="mail"]'));
-            await element.sendKeys(faker.internet.email());
-            break;
-        case '<password>':
-            element = await driver.findElement(By.css('[data-testid="password"]'));
-            await element.sendKeys(faker.internet.password());
+        case 'Invalid Email Address':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
         default:
-            console.log('Invalid input');
+            console.log('Invalid message');
             return;
     }
+    assert(element, `Element with message '${message}' not found`);
 });
 
-const faker = require('faker');
+Then('I should see a message {string}', async function (messagePlaceholder) {
+    let element;
 
-Then('I should receive {string}', async function (errorMessage) {
-    let receivedMessage;
+    let message = messagePlaceholder.replace('<message>', '');
 
-    switch(errorMessage) {
-        case '<error_message>':
-            receivedMessage = faker.random.arrayElement(['An unexpected error occurred.', 'Invalid input provided.', 'Server error. Please try again later.']);
+    switch(message) {
+        case 'Incorrect password':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
-        case '<message>':
-            receivedMessage = faker.random.arrayElement(['Message received successfully.', 'Operation completed.', 'Request processed successfully.']);
+        case 'Incorrect email':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
-        case '<Email address not found>':
-            receivedMessage = 'Email address not found.';
+        case 'Email doesn\'t exist':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message]')));
             break;
-        case '<Incorrect password>':
-            receivedMessage = 'Incorrect password provided.';
+        case 'Unregistered email':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
             break;
-        case '<reset email has been sent>':
-            receivedMessage = 'Password reset email has been sent.';
+        case 'Empty field':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message]')));
             break;
-        
-        case 'login successful':
-            receivedMessage = 'login successful';
-            break;
-        case 'password reset successful':
-            receivedMessage = 'password reset successful';
-            break;
-        case 'Unsuccessful login attempt':
-            receivedMessage = 'Unsuccessful login attempt';
-            break;
-           
-            
         default:
-            console.log('Invalid error message');
+            console.log('Invalid message');
             return;
     }
+    assert(element, `Element with message '${message}' not found`);
+});
 
-    console.log('Received message:', receivedMessage);
+Then('I should see a message {string}', async function (messagePlaceholder) {
+
+    let message = messagePlaceholder.replace('<message>', '');
+
+    let element;
+
+    switch(message) {
+        case 'password does not match':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            break;
+        case 'password requires atleast 1 special character':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(),message)]')));
+            break;
+        case 'Password requires atleast 1 number':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            break;
+        case 'Password requires atleast 1 uppercase letter':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message]')));
+            break;
+        case 'password requires atleast 1 lowercase letter':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            break;
+        case 'password requires atleast 8 characters':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message]')));
+            break;
+        case 'password should not exceed 12 character':
+            element = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            break;
+        default:
+            console.log('Invalid message');
+            return;
+    }
+    assert(element, `Element with message '${message}' not found`);
 });
