@@ -138,16 +138,17 @@ When('I enter valid first, middle, and last names', async function () {
 
 When('the option to resend OTP should be activated after 3 minutes',{ timeout: 3 * 60 * 1000}, async function () {
     
-    await new Promise(resolve => setTimeout(resolve, 3 * 60 * 1000));
-    const resendOTPButton = await driver.wait(until.elementLocated(By.css('[data-testid="resend_otp_button"]')));
-    const isVisible = await resendOTPButton.isVisible();
+  await new Promise(resolve => setTimeout(resolve, this.timeout));
+  const resendOTPButton = await driver.wait(until.elementLocated(By.css('[data-testid="resend_otp_button"]')));
+  const isVisible = await resendOTPButton.isVisible();
 
-    if (isVisible) {
-        console.log("Resend OTP option activated after 3 minutes.");
-    } else {
-        throw new Error("Resend OTP option is not activated after 3 minutes.");
-    }
+  if (isVisible) {
+      console.log("Resend OTP option activated after 3 minutes.");
+  } else {
+      throw new Error("Resend OTP option is not activated after 3 minutes.");
+  }
 });
+
 
 //document.getElementById("myP").style.visibility = "hidden";
 
