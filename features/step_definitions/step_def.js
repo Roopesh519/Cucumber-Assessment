@@ -41,8 +41,11 @@ Given('I am on the registration page', async function () {
   Then('my details should be validated with {string}', async function (message) {
     await driver.wait(until.elementLocated(By.xpath(`//*[text()="${message}"]`)));
   });
+  
+for i = 1 to 100
 
-
+let pageSource = await driver.getPageSource()
+assert(pageSource.incldues(message))
   When('I click on {string} button', async function (button) {
     let buttonElement;
     
@@ -79,31 +82,31 @@ Given('I am on the registration page', async function () {
 
     switch(message) {
         case 'First, Middle and Last names are empty':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
             break;
         case 'OTP sent successfully to phone number':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), ${message})]')));
             break;
         case 'OTP sent successfully to email address':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), ${message})]')));
             break;
         case 'Email Already Exists':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), ${message})]')));
             break;
         case 'Phone Number Already Exists':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), ${message})]')));
             break;
         case 'Username Already Exists':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), ${message})]')));
             break;
         case 'registersation successful':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), ${message})]')));
             break;
         case 'Verification mail sent to registered email':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), ${message})]')));
             break;
         case 'Invalid OTP':
-            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), message)]')));
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), ${message})]')));
             break;
         default:
             console.log('Invalid message');
@@ -118,6 +121,7 @@ When('I enter my phone number starting with code +91 followed by a 10-digit numb
   const phoneNumberInput = await driver.wait(until.elementLocated(By.css('[data-testid="phone_number"]')));
   await phoneNumberInput.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
   await phoneNumberInput.sendKeys(phoneNumber);
+  global.phoneNumber = phoneNumber
 });
 
 When('I enter valid first, middle, and last names', async function () {
@@ -214,15 +218,18 @@ When('I enter the 6-digit OTP for {string} validation', async function (validati
 When('I enter already existing {string}', async function (inputType) {
   let inputField;
 
+  // global.
   switch(inputType) {
       case 'Username':
           inputField = await driver.wait(until.elementLocated(By.css('[data-testid="username"]')));
           break;
       case 'phonenumber':
           inputField = await driver.wait(until.elementLocated(By.css('[data-testid="phonenumber"]')));
+          existingData = global.phoneNumber;
           break;
       case 'email':
           inputField = await driver.wait(until.elementLocated(By.css('[data-testid="email"]')));
+          existingData ="Bharath.shet@7edge.com"
           break;
       default:
           console.log('Invalid input type');
@@ -245,7 +252,7 @@ When('I enter my valid basic details', async function () {
   const middleName = faker.person.middleName();
   const lastName = faker.person.lastName();
   const username = faker.internet.userName();
-
+ global.userName = username;
   await firstNameInput.sendKeys(firstName);
   await middleNameInput.sendKeys(middleName);
   await lastNameInput.sendKeys(lastName);

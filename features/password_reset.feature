@@ -19,6 +19,14 @@ Scenario Outline: Password reset with invalid email
       | email_with_spaces.com  |
 
 
+Scenario: Password reset with registered email
+    Given I am on the login screen
+    When I click on "Forgot Password" button
+    And I enter my email as "admin@gmail.com"
+    And I click on "Reset Password" button
+    Then I should see a message "reset email has been sent"
+
+
 @get_link
 Scenario Outline: Validate with new password which do not meet criteria 
     Given I am on the password reset screen
@@ -41,7 +49,7 @@ Scenario Outline: Validate with new password which do not meet criteria
 Scenario: Validate new password with all criteria met
     Given I am on the password reset screen
     When I enter my new password as "Admin@123"
-    And I enter confirm password as "Admin@1234"
+    And I enter confirm password as "Admin@123"
     Then I should see a message "Password updated successfully"
 
 
@@ -63,13 +71,6 @@ Scenario Outline: Login with invalid credentials
       |                   |            | empty field                      |
 
 #happy
-
-Scenario: Password reset with registered email
-    Given I am on the login screen
-    When I click on "Forgot Password" button
-    And I enter my email as "admin@gmail.com"
-    And I click on "Reset Password" button
-    Then I should see a message "reset email has been sent"
   
 
 Scenario Outline: Login with new password
