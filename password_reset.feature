@@ -8,9 +8,9 @@ So that I can regain access to my account
 
 Scenario: Password reset with invalid email
     Given I am on the login screen
-    When I click on "Forgot Password" link
+    When I click on "Forgot Password" button
     And I enter "<invalid_email>"
-    And I click on "Reset Password" link
+    And I click on "Reset Password" button
     Then I should receive "<error_message>"
 
     Examples:
@@ -18,8 +18,8 @@ Scenario: Password reset with invalid email
       | invalidemail@          | Invalid Email Address |
       | email_without_at.com   | Invalid Email Address |
       | email_with_spaces.com  | Invalid Email Address |
+      | bharath.shet@7edge.com | "Email address does not exist"|
 
-    | bharath.shet@7edge.com | "Email address does not exist"|
 @get_link
 Scenario Outline: Validate with new password which do not meet criteria 
     Given I am on the password reset screen
@@ -44,6 +44,7 @@ Scenario: Validate new password with all criteria met
     When I enter "Admin@123"
     And I enter "Admin@123"
     Then I should receive "<Password updated successfully>"
+
 
 # Scenario: Login with unregistered email
     

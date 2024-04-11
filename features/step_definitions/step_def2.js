@@ -10,18 +10,18 @@ Given('I am on the password reset screen', async function () {
 });
 
 
-When('I click on {string} link', async function (linkText) {
-    let linkElement;
+When('I click on {string} button', async function (button) {
+    let buttonElement;
     
-    switch(linkText) {
+    switch(button) {
         case 'Forgot Password':
-            linkElement = await driver.findElement(By.linkText('Forgot Password'));
+            buttonElement = await wait(until.elementLocated(By.css('[data-testid=Forgot_Password')));
             break;
         case 'Reset Password':
-            linkElement = await driver.findElement(By.linkText('Reset Password'));
+            buttonElement = await wait(until.elementLocated(By.css('[data-testid=Reset Password')));
             break;
         default:
-            console.log('Invalid link text');
+            console.log('Invalid button text');
             return; 
     }
 
