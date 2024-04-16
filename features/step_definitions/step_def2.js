@@ -1,5 +1,5 @@
 const { Given, When, Then, Before, setDefaultTimeout } = require('@cucumber/cucumber');
-const faker = require('faker');
+const { faker } = require('@faker-js/faker');
 
 Before(async function(){
     // make api call using tags

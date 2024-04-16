@@ -13,4 +13,5 @@ This repo contains cucumber assessment
    7. Confirm Password
    
 2. Password Reset
-
+   1. Click on the forgot password button
+   2. I am 

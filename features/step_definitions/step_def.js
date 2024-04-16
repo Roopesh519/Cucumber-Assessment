@@ -41,6 +41,8 @@ Given('I am on the registration page', async function () {
   Then('my details should be validated with {string}', async function (message) {
     await driver.wait(until.elementLocated(By.xpath(`//*[text()="${message}"]`)));
   });
+
+  //pagesource
   
 for i = 1 to 100
 
@@ -124,7 +126,7 @@ When('I enter my phone number starting with code +91 followed by a 10-digit numb
   global.phoneNumber = phoneNumber
 });
 
-When('I enter valid first, middle, and last names', async function () {
+When('I enter valid first, middle and last names', async function () {
   const firstName = faker.person.firstName();
   const middleName = faker.person.middleName();
   const lastName = faker.person.lastName();
