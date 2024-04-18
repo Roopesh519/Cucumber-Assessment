@@ -11,30 +11,35 @@ Given('I am on the registration page', async function () {
   When('I enter my First name as {string}', async function (first_name) {
     let element = await driver.wait(until.elementLocated(By.css('[data-testid="first_name"]')))
     await driver.wait(until.elementIsVisible(element))
+    await element.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
     element.sendKeys(first_name)
   });
 
   When('I enter my Middle name as {string}', async function (middle_name) {
     let element = await driver.wait(until.elementLocated(By.css('[data-testid="middle_name"]')))
     await driver.wait(until.elementIsVisible(element))
+    await element.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
     element.sendKeys(middle_name)
   });
 
   When('I enter my Last name as {string}', async function (last_name) {
     let element = await driver.wait(until.elementLocated(By.css('[data-testid="last_name"]')))
     await driver.wait(until.elementIsVisible(element))
+    await element.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
     element.sendKeys(last_name)
   });
 
   When('I enter my username as {string}', async function (username) {
     let element = await driver.wait(until.elementLocated(By.css('[data-testid="last_name"]')))
     await driver.wait(until.elementIsVisible(element))
+    await element.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
     element.sendKeys(username)
   });
 
   When('I enter my email as {string}', async function (email) {
     let element = await driver.wait(until.elementLocated(By.css('[data-testid="email"]')))
     await driver.wait(until.elementIsVisible(element))
+    await element.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
     element.sendKeys(email)
   });
 

@@ -1,0 +1,164 @@
+for i = 1 to 100
+
+let pageSource = await driver.getPageSource()
+assert(pageSource.incldues(message))
+  When('I click on {string} button', async function (button) {
+    let buttonElement;
+    
+    switch(button) {
+        case 'Submit':
+            buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="Submit"]')));
+            break;
+        case 'verify_phone_number':
+            buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="verify_phone_number"]')));
+            break;
+        case 'Verify_OTP':
+            buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="Verify_OTP"]')));
+            break;
+        case 'Verify_Email':
+            buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="Verify_Email"]')));
+            break;
+        case 'Register':
+            buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="Register"]')));
+            break;
+        case 'Verify_phone':
+            buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="Verify_phone"]')));
+              break;
+        default:
+            console.log('Invalid button string');
+            return; 
+    }
+
+    await buttonElement.click();
+});
+
+
+
+
+ When('I should see a popup message saying {string}', async function (message) {
+    let popupElement;
+
+    switch(message) {
+        case 'First, Middle and Last names are empty':
+            popupElement = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'OTP sent successfully to phone number':
+            popupElement = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'OTP sent successfully to email address':
+            popupElement = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'Email Already Exists':
+            popupElement = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'Phone Number Already Exists':
+            popupElement = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'Username Already Exists':
+            popupElement = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'registersation successful':
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), ${message})]')));
+            break;
+        case 'Verification mail sent to registered email':
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), ${message})]')));
+            break;
+        case 'Invalid OTP':
+            popupElement = await driver.wait(until.elementLocated(By.xpath('//*[contains(text(), ${message})]')));
+            break;
+        default:
+            console.log('Invalid message');
+            return;
+    }
+    assert(popupElement, `Popup message '${message}' not found`);
+});
+
+
+When('I enter valid email', async function () {
+  const emailInput = await driver.wait(until.elementLocated(By.css('[data-testid="email"]')));
+  const validEmail = faker.internet.email();
+
+  await emailInput.sendKeys(validEmail);
+});
+
+
+----------------------------------------------------
+
+password reset 
+
+When('I should see a message {string}', async function (message) {
+    let element;
+
+    switch(message) {
+        case 'Login in successful':
+            element = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'reset email has been sent':
+            element = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'Password updated successfully':
+            element = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'Invalid Email Address':
+            element = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+            
+        default:
+            console.log('Invalid message');
+            return;
+    }
+
+    // implement page source
+    assert(element, `Element with message '${message}' not found`);
+});
+
+
+
+Then('I should see a message {string}', async function (messagePlaceholder) {
+    let element;
+
+    let message = messagePlaceholder.replace('<message>', '');
+
+    switch(message) {
+        
+        default:
+            console.log('Invalid message');
+            return;
+    }
+    assert(element, `Element with message '${message}' not found`);
+});
+
+Then('I should see a message {string}', async function (messagePlaceholder) {
+
+    let message = messagePlaceholder.replace('<message>', '');
+
+    let element;
+
+    switch(message) {
+        case 'password does not match':
+            element = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'password requires atleast 1 special character':
+            element = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'Password requires atleast 1 number':
+            element = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'Password requires atleast 1 uppercase letter':
+            element = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'password requires atleast 1 lowercase letter':
+            element = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'password requires atleast 8 characters':
+            element = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        case 'password should not exceed 12 character':
+            element = await driver.wait(until.elementLocated(By.xpath(`//*[contains(text(), ${message})]`)));
+            break;
+        default:
+            console.log('Invalid message');
+            return;
+    }
+    assert(element, `Element with message '${message}' not found`);
+});
