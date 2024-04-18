@@ -38,7 +38,7 @@ So that I can access the application's features
 
   Scenario: Validate phone number with OTP 
     Given I am on the registration page
-    When I enter valid first, middle, and last names
+    When I enter valid first, middle and last names
     And I enter my phone number starting with code +91 followed by a 10-digit number
     And I click on "verify_phone_number" button
     Then I should see a popup message saying "OTP sent successfully to phone number"
@@ -50,7 +50,7 @@ So that I can access the application's features
 
   Scenario: Invalid OTP for phone number
     Given I am on the registration page
-    When I enter valid first, middle, and last names
+    When I enter valid first, middle and last names
     And I enter my phone number starting with code +91 followed by a 10-digit number
     And I click on "verify_phone_number" button
     Then I should see a popup message saying "OTP sent successfully to phone number"
@@ -69,7 +69,7 @@ So that I can access the application's features
     
   Scenario: Validate email address with OTP
     Given I am on the registration page
-    When I enter valid first, middle, and last names
+    When I enter valid first, middle and last names
     And I enter a valid email address
     And I click on "Verify_Email" button
     Then I should see a popup message saying "OTP sent successfully to email address"

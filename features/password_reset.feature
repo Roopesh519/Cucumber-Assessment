@@ -32,7 +32,7 @@ Scenario Outline: Validate with new password which do not meet criteria
     Given I am on the password reset screen
     When I enter my new password as "<new_password>" 
     And I enter confirm paassword as "<confirm_new_password>" 
-    Then I should see a message <message>
+    Then I should see a error message <message>
 
     Examples:
     | new_password | confirm_new_password | message                                       | 
@@ -62,13 +62,13 @@ Scenario Outline: Login with invalid credentials
 
     Examples:
       | email             | password   | message                          |
-      | admin@gmail.com   | admin@123  | Incorrect password               |
-      | pratham 7edge.com | pratham@123| Incorrect email                  |
-      | prathvi@7edge.com | prathvi@123| Email doesn't exist              |
-      | ram@yahoo.com     | ram@123    | unregistered email               |
-      |                   | ram@123    | empty field                      |
-      | ram@yahoo.com     |            | empty field                      |
-      |                   |            | empty field                      |
+      | admin@gmail.com   | admin@123  | Invalid credentials              |   #incorrect password
+      | pratham 7edge.com | pratham@123| Invalid credentials              |   #incorrect Email
+      | prathvi@7edge.com | prathvi@123| Invalid credentials              |   #email doesn't exist
+      | ram@yahoo.com     | ram@123    | Invalid credentials              |   #unregistered email
+      |                   | ram@123    | required field                   |
+      | ram@yahoo.com     |            | required field                   |
+      |                   |            | required field                   |
 
 #happy
   
