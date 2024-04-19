@@ -4,35 +4,43 @@ I want to search for a product and add it to cart
 
 
     Scenario Outline: Search for a Product
-        Given I am on a shopping site
-        When I enter a product name as <Product> into the search bar
+        Given I am on home page
+        When I enter a product name as "<Product>" into the search bar
         Then I should see a list of products that match the search query
      
         Examples:
-        | product      |
+        | Product      |
         | Laptop       |
         | Headphones   |
         | Smartphone   |
         | Camera       |
 
-
+    #changes required 
+    
     Scenario Outline: Filtering search results by price range and additional criteria
-        Given I am on a shopping site
+        Given I am on home page
         When I enter a product name as "laptop" into the search bar
         And I click on "Filter" button
-        And I select the 1st checkbox of the "Price"
-        And I select the 2nd checkbox of the "Brand"
-        And I select the 3rd checkbox of the "ScreenSize"
-        And I select the 4th checkbox of the "Processor"
+        And I select the prices as 10000 - 20000 
+        And I select the <check> checkbox of the "Brand"
+        And I select the <check> checkbox of the "ScreenSize"
+        And I select the <check> checkbox of the "Processor"
         And I click on "apply_filter" button
         Then I should see a message "Filter Applied Successfully"
 
+        Examples:
+        | check  |
+        | 1      |
+        | 2      |
+        | 3      |
+        | 2      |
+
 
     Scenario: Viewing product details
-        Given I am on a shopping site
+        Given I am on home page
         When I enter a product name as "laptop" into the search bar
         Then I should see a message "Showing Results for laptop"
-        When I click on a particular item "laptop1"
+        When I click on a particular product from results
         Then the product details for "laptop1" are displayed
 
 
@@ -41,25 +49,26 @@ I want to search for a product and add it to cart
         When I click on "add_to_cart" button
         Then I should see a message "Product added to cart Successfully"
 
+    #-- cart ++
     
     Scenario: User performs an empty search
-        Given I am on a shopping site
+        Given I am on home page
         When I search with empty field
         Then I should see a message "Please enter a product name"
     
 
-    Scenario:cart is empty
+    Scenario: Cart is empty
         Given I am on the view cart page
-        Then I should see a message "cart empty"
+        Then I should see a message "No products added yet into cart"
 
 
     Scenario: Viewing added items in the cart
         Given I am on the view Cart page
-        Then I should see the subtotal as <subtotal>
+        Then I should see the subtotal as "<subtotal>"
 
         Examples:
         | subtotal  |
-        | "100.00"  |
+        | 100.00  |
         | 250.00    |
         | 500.00    |
 
@@ -89,11 +98,11 @@ I want to search for a product and add it to cart
         | Headphones | increase quantity  | 2        |
 
 
-    Scenario: Adding new items to the cart
+    Scenario: Adding new product to the cart
         Given I am on the view cart page
         When I enter a product name as "phone" into the search bar
         Then I should see a message "Showing result for Phone"
-        When I click on a particular item "phone1"
+        When I click on a particular product from results
         Then I see the details of the "phone1"
         When I click on "add_to_cart" button
         Then I should see a message "Item added to cart successfully"
@@ -117,16 +126,16 @@ I want to search for a product and add it to cart
         Then I should see the subtotal of only the selected items "<SubtotalSelectedItems>"
 
         Examples:
-        | SelectedItems        | SubtotalSelectedItems |
-        | Laptop, Headphones   | 2500                  |
-        | Smartphone           | 1000                  |
-        | Tablet, Speaker      | 3500                  |
+        | SelectedItems        | 
+        | Laptop, Headphones   | 
+        | Smartphone           | 
+        | Tablet, Speaker      |
 
 
     # Invalid product search
 
     Scenario: Search for a Product with No Results Found
-        Given I am on a shopping site
+        Given I am on home page
         When I enter a product name as "nonexistent_product" into the search bar
         Then I should see a message "No results found"
 

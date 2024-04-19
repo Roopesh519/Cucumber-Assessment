@@ -162,3 +162,84 @@ Then('I should see a message {string}', async function (messagePlaceholder) {
     }
     assert(element, `Element with message '${message}' not found`);
 });
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+product search  - backup
+-------------------------------------------------------------------------------
+driver.findElement(By.id("hobbies-checkbox-1")).click();
+
+
+
+driver.findElement(By.cssSelector("label[for='hobbies-checkbox-1']")).click();
+
+//Selecting the second checkbox
+driver.findElement(By.cssSelector("label[for='hobbies-checkbox-2']")).click();
+		
+//Selecting the last check box
+driver.findElement(By.cssSelector("label[for='hobbies-checkbox-3']")).click();
+
+--------------------------------------------------------------------------------
+cucumber
+
+
+  Scenario: New Clergy
+    Given I am on the clergies page
+    When I follow "New Clergy"
+    And I fill in "Surname" with "Wells"
+    And I fill in "Given names" with "Robin"
+    And I check the 1st of the "diocese" checkboxes
+    And I check the 2nd of the "diocese" checkboxes
+    And I press "Create Clergy"
+    Then I should see "Clergy was successfully created."
+    
+    
+    
+    -----------------------------------------------
+    
+        Scenario Outline: Filtering search results by price range and additional criteria
+        Given I am on a shopping site
+        When I enter a product name as <Product> into the search bar
+        And I click on "Filter" button
+        And I check the 1st of the "MinPrice" checkboxes
+        And I fill the filter as <MaxPrice>
+        And I fill the filter as <Brand>
+        And I fill the filter as <ScreenSize>
+        And I fill the filter as <Processor>
+        And I click on "apply_filter" button
+        Then I should see a message "Filter Applied Successfully"
+
+        Examples:
+        | Product       | MinPrice | MaxPrice | Brand  | ScreenSize | Processor         |
+        | iPhone        | 500      | 1000     | Apple  | 6.1        | A14 Bionic        |
+        | Samsung TV    | 400      | 800      | Samsung| 55         | Snapdragon gen 1  |
+        | Dell Laptop   | 600      | 1200     | Dell   | 15         | Intel i7          |
+
+
+    ------------------------------------------------------------------------------------------
+
+
+          // switch(button) {
+          //     case 'MinPrice':
+          //         buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="minPrice"]')));
+          //         break;
+          //     case 'MaxPrice':
+          //         buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="maxPrice"]')));
+          //         break;
+          //     case 'Brand':
+          //         buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="brand"]')));
+          //         break;
+          //     case 'ScreenSize':
+          //         buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="ScreenSize"]')));
+          //         break;
+          //     case 'Processor':
+          //         buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="processor"]')));
+          //         break; 
+
+          //     default:
+          //         console.log('Invalid button string');
+          //         return; 
+          // }
+          await buttonElement.click();
