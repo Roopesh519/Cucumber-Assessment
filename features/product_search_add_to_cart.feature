@@ -16,13 +16,13 @@ I want to search for a product and add it to cart
         | Camera       |
 
     #changes required 
-    
+
     Scenario Outline: Filtering search results by price range and additional criteria
         Given I am on home page
         When I enter a product name as "laptop" into the search bar
         And I click on "Filter" button
         And I select the prices as 10000 - 20000 
-        And I select the <check> checkbox of the "Brand"
+        And I select the brand as asus
         And I select the <check> checkbox of the "ScreenSize"
         And I select the <check> checkbox of the "Processor"
         And I click on "apply_filter" button
@@ -68,7 +68,7 @@ I want to search for a product and add it to cart
 
         Examples:
         | subtotal  |
-        | 100.00  |
+        | 100.00    |
         | 250.00    |
         | 500.00    |
 

@@ -13,7 +13,7 @@ Before(async function(){
     // response :{
         // link
     // }
-})
+});
 
 Given('I am on the login screen', async function () {
   await this.driver.get('https://example.com/login');
