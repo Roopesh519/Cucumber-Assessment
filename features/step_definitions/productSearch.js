@@ -65,7 +65,19 @@ When('I search with empty field'), async function(){
 
 // pending
 
-When('I select the {string} checkbox of the {string}'), async function(check, filter) {
+When('I select the price as 10000 - 20000'), async function(filter) {
+
+}
+
+When('I select the brand as asus'), async function(filter) {
+
+}
+
+When('I select the screen-size as 15 inches'), async function(filter) {
+
+}
+
+When('I select the processor as intel i5'), async function(filter) {
 
 }
 
@@ -124,7 +136,7 @@ When('I click on a particular product from results', async function (){
 });
 
 
-Then('the product details for {string} are displayed', function (itemName) {
+Then('I should see the product details', function (itemName) {
 
 });
 
@@ -139,13 +151,15 @@ Given('I am on the view cart page', function () {
 });
 
 
-Then('I should see the subtotal as {string}', function (subtotal) {
+Then('I should see the subtotal', function (subtotal) {
 
 });
+
 
 When('I click on "delete" button for item {string}', function (itemName) {
 
 });
+
 
 When('I click on the {string} button of item {string}', function (buttonName, itemName) {
 
@@ -157,12 +171,12 @@ When('I enter quantity as {string}', function (quantity) {
 });
 
 
-Then('I see the details of the {string}', function (itemName) {
+Then('I see the details of the product', function (itemName) {
 
 });
 
 
-Then('I should see subtotal as {string}', function (subtotal) {
+Then('I should see subtotal', function (subtotal) {
 
 });
 
@@ -175,6 +189,7 @@ Then('I should see the subtotal of all items', function () {
 When('I select the checkbox of specific items {string}', function (selectedItems) {
 
 });
+
 
 Then('I should see the subtotal of only the selected items {string}', function (subtotalSelectedItems) {
 
@@ -190,9 +205,11 @@ Given('the product {string} is out of stock', function (productName) {
 
 });
 
+
 Given('the available stock for the product {string} is {string}', function (productName, availableStock) {
 
 });
+
 
 Given('I have already added {string} of the product to the cart', function (currentQuantity) {
 
