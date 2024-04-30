@@ -91,7 +91,7 @@ I want to search for a product and add it to cart
         Given I am on the view cart page
         When I calculate the sum of the prices of all items in the cart
         Then the displayed subtotal should match the calculated sum
-        And I should see the subtotal
+        And I should see the subtotal of all items
    
 
     Scenario Outline: Display subtotal for selected items in cart
@@ -118,13 +118,13 @@ I want to search for a product and add it to cart
     # Product is out of stock
 
     Scenario: Attempt to Add Out of Stock Product to Cart
-        Given I am on the product details page
+        Given I am on the product details page of "laptop"
         And the product "out_of_stock_product" is out of stock
         When I click on "add_to_cart" button
         Then I should see a message "This product is currently out of stock"
 
     Scenario Outline: Attempt to Add More Items Than Available Stock to Cart
-        Given I am on the product details page
+        Given I am on the product details page of "laptop"
         And the available stock for the product "limited_stock_product" is "<available_stock>"
         And I have already added "<current_quantity>" of the product to the cart
         When I attempt to add "<additional_quantity>" more of the product to the cart

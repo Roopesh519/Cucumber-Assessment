@@ -3,16 +3,24 @@ const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
 
 const axios = require('axios');
 
-let product_search;
+let product_detail;
+let shopping_cart;
 
-Before(async function(){
-    let response = await axios.get('https://amazon.in/laptop', {
+Before(async function(productName){
+    let response1 = await axios.get(`https://amazon.in/${productName}`, {
         params: {
             email: "admin@gmail.com"
         }
     });
 
-    product_search = response.data.link;
+    let response2 = await axios.get('https://www.amazon.in/gp/cart/view.html', {
+        params: {
+            email: "admin@gmail.com"
+        }
+    });
+
+    product_detail = response1.data.link;
+    shopping_cart = response2.data.link;
 });
 
 
@@ -143,7 +151,7 @@ Then('I should see the product details', async function () {
 
 
 Given('I am on the view cart page', async function () {
-  await driver.get('https://www.amazon.in/gp/cart/view.html?ref_=nav_cart');
+  await driver.get(global.product_detail);
   await new Promise(resolve => setTimeout(resolve, 500));
   await driver.wait(until.elementLocated(By.xpath('//*[text()="Shopping Cart"]')));
 });
@@ -170,7 +178,7 @@ Then('the displayed subtotal should match the calculated sum', async function ()
 }); 
 
 
-Then('I should see the subtotal', async function () {
+Then('I should see the subtotal of all items', async function () {
   let subtotalElement = await driver.findElement(By.css('subtotal'));
   let subtotal = await subtotalElement.getText();
   console.log(`The subtotal is: ${subtotal}`);
@@ -189,7 +197,7 @@ When('I click on the {string} button of item {string}', async function (buttonNa
 });
 
 
-When('I click on {string} button for a particular product ', async function (addToCart) {
+When('I click on {string} button for a particular product', async function (addToCart) {
   for (let loop = 100; loop > 0; loop--) {
     await driver.manage().setTimeouts({ pageLoad: 300 });
     let pageSource = await driver.getPageSource();
@@ -197,7 +205,7 @@ When('I click on {string} button for a particular product ', async function (add
       if (check) {
         await driver.wait(until.elementLocated(By.css('[data-testid="addToCart"]'))).click();
       }
-    }
+  }
 });
 
 
@@ -205,19 +213,41 @@ Then('I see the details of the product', function (itemName) {
 
 });
 
+let selectedItemsPrices = [];
 
-Then('I should see the subtotal of all items', function () {
+When('I select the checkbox of specific items {string}', async function (selectedItems) {
+    let items = selectedItems.split(',');
 
+    for (let item of items) {
+        let checkbox = await driver.driver.wait(until.elementLocated(By.css(`[data-testid="${item.trim()}_checkbox"]`)));
+        await checkbox.click();
+
+        let priceElement = await driver.driver.wait(until.elementLocated(By.css(`[data-testid="${item.trim()}_price"]`)));
+        let priceText = await priceElement.getText();
+        let price = parseFloat(priceText.replace(/[^0-9.]/g, ""));
+        selectedItemsPrices.push(price);
+    }
 });
 
 
-Then('I should see the subtotal of only the selected items {string}', function (subtotalSelectedItems) {
+Then('I should see the subtotal of only the selected items', async function () {
+    let expectedSubtotal = selectedItemsPrices.reduce((a, b) => a + b, 0);
 
+    let subtotalElement = await driver.wait(until.elementLocated(By.css('subtotal')));
+    let subtotalText = await subtotalElement.getText();
+    let subtotal = parseFloat(subtotalText.replace(/[^0-9.]/g, ""));
+
+    if (subtotal !== expectedSubtotal) {
+        throw new Error(`The displayed subtotal (${subtotal}) does not match the expected subtotal of the selected items (${expectedSubtotal}).`);
+    }
 });
 
 
-Given('I am on the product details page', function () {
 
+Given('I am on the product details page of {string}', async function (productName) {
+  await driver.get(global.product_detail);
+  await new Promise(resolve => setTimeout(resolve, 500));
+  await driver.wait(until.elementLocated(By.xpath('//*[text()="${productName}"]')));
 });
 
 
