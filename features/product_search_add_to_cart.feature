@@ -79,20 +79,20 @@ I want to search for a product and add it to cart
         | Headphones | increase quantity  |
 
 
-    Scenario: Adding new product to the cart
+    Scenario: Adding new product to the cart from product search page
         Given I am on the view cart page
         When I enter a product name as "phone" into the search bar
         Then I should see a message "Showing result for Phone"
-        When I click on a particular product from results
-        Then I see the details of the product
-        When I click on "add_to_cart" button
+        When I click on "add_to_cart" button for a particular product 
         Then I should see a message "Item added to cart successfully"
 
 
-    Scenario: Displaying Subtotal on View Cart Page
+    Scenario: Verifying Subtotal on View Cart Page
         Given I am on the view cart page
-        Then I should see subtotal
-        
+        When I calculate the sum of the prices of all items in the cart
+        Then the displayed subtotal should match the calculated sum
+        And I should see the subtotal
+   
 
     Scenario Outline: Display subtotal for selected items in cart
         Given I am on the view cart page

@@ -2,18 +2,20 @@ const { Given, When, Then, Before, setDefaultTimeout } = require('@cucumber/cucu
 const { faker } = require('@faker-js/faker');
 const assert = require('assert'); 
 
+const axios = require('axios');
+
+let forgot_password_link;
+
 Before(async function(){
-    // make api call using tags
-    // store the link u get int reponse as global variable
-    // pass this global variable link to 
+    let response = await axios.get('https://amazon/password?', {
+        params: {
+            email: "admin@gmail.com"
+        }
+    });
 
-    // dummy get api call 
-
-    // https://dummy-get-link?email="admin@gmail.com"
-    // response :{
-        // link
-    // }
+    forgot_password_link = response.data.link;
 });
+
 
 Given('I am on the login screen', async function () {
   await this.driver.get('https://example.com/login');
@@ -34,10 +36,10 @@ When("I click on {string} button", async function (button) {
     
             switch(button) {
                 case 'Forgot Password':
-                    buttonElement = await wait(until.elementLocated(By.css('[data-testid=Forgot_Password')));
+                    buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid=Forgot_Password')));
                     break;
                 case 'Reset Password':
-                    buttonElement = await wait(until.elementLocated(By.css('[data-testid=Reset_Password')));
+                    buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid=Reset_Password')));
                     break;
                 default:
                     console.log('Invalid button text');
