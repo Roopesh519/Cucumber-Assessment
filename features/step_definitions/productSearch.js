@@ -65,21 +65,51 @@ When('I search with empty field'), async function(){
 
 // pending
 
-When('I select the price as 10000 - 20000'), async function(filter) {
+When('I select the price as 10000 - 20000', async function() {
+      let select = await driver.findElement(By.id('ID_OF_PRICE_DROPDOWN'));
+      await driver.wait(until.elementIsVisible(select), 5000);
+      await select.click();
+      await driver.findElement(By.xpath("//option[. = '10000 - 20000']")).click();
+});
 
-}
+When('I select the brand as asus', async function() {
+  let driver = await new Builder().forBrowser('firefox').setFirefoxOptions(new Options().headless()).build();
+  try {
+      await driver.get('URL_OF_YOUR_PAGE');
+      let select = await driver.findElement(By.id('ID_OF_BRAND_DROPDOWN'));
+      await driver.wait(until.elementIsVisible(select), 5000);
+      await select.click();
+      await driver.findElement(By.xpath("//option[. = 'asus']")).click();
+  } finally {
+      await driver.quit();
+  }
+});
 
-When('I select the brand as asus'), async function(filter) {
+When('I select the screen-size as 15 inches', async function() {
+  let driver = await new Builder().forBrowser('firefox').setFirefoxOptions(new Options().headless()).build();
+  try {
+      await driver.get('URL_OF_YOUR_PAGE');
+      let select = await driver.findElement(By.id('ID_OF_SCREEN_SIZE_DROPDOWN'));
+      await driver.wait(until.elementIsVisible(select), 5000);
+      await select.click();
+      await driver.findElement(By.xpath("//option[. = '15 inches']")).click();
+  } finally {
+      await driver.quit();
+  }
+});
 
-}
-
-When('I select the screen-size as 15 inches'), async function(filter) {
-
-}
-
-When('I select the processor as intel i5'), async function(filter) {
-
-}
+When('I select the processor as intel i5', async function() {
+  let driver = await new Builder().forBrowser('firefox').setFirefoxOptions(new Options().headless()).build();
+  try {
+      await driver.get('URL_OF_YOUR_PAGE');
+      let select = await driver.findElement(By.id('ID_OF_PROCESSOR_DROPDOWN'));
+      await driver.wait(until.elementIsVisible(select), 5000);
+      await select.click();
+      await driver.findElement(By.xpath("//option[. = 'intel i5']")).click();
+  } finally {
+      await driver.quit();
+  }
+});
 
 When('I fill the filter as {string}', async function (filter) {
     for (let loop = 100; loop > 0; loop--) {
