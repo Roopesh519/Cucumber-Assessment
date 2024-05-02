@@ -15,7 +15,6 @@ I want to search for a product and add it to cart
         | Smartphone   |
         | Camera       |
 
-    #changes required
 
     Scenario: Filtering search results by price range and additional criteria
         Given I am on home page
@@ -28,7 +27,7 @@ I want to search for a product and add it to cart
         And I click on "apply_filter" button
         Then I should see a message "Filter Applied Successfully"
 
-
+    #problem 
     Scenario: Viewing product details
         Given I am on home page
         When I enter a product name as "laptop" into the search bar
@@ -37,28 +36,67 @@ I want to search for a product and add it to cart
         Then I should see the product details
 
 
-    Scenario: Adding product to cart from Product details page
-        Given I am on the product details page
-        When I click on "add_to_cart" button
-        Then I should see a message "Product added to cart Successfully"
-
-    #-- cart ++
-
     Scenario: User performs an empty search
         Given I am on home page
         When I search with empty field
         Then I should see a message "Please enter a product name"
 
 
+    # Invalid product search
+
+    Scenario: Search for a Product with No Results Found
+        Given I am on home page
+        When I enter a product name as "nonexistent_product" into the search bar
+        Then I should see a message "No results found"
+
+
     Scenario: Cart is empty
         Given I am on the view cart page
         Then I should see a message "No products added yet into cart"
- 
+
+
+    Scenario: Adding new product to the cart from home page
+        Given I am on home page
+        When I enter a product name as "phone" into the search bar
+        Then I should see a message "Showing result for Phone"
+        When I click on "add_to_cart" button for the first product 
+        Then I should see a message "Item added to cart successfully"
+
+
+    @get_cart
+    Scenario: Verify the product added to cart from home page has been updated to cart 
+        Given I am on the view cart page
+        Then I should see recently added product in the cart
+
+
+    Scenario: Adding product to cart from Product details page
+        Given I am on the product details page of "laptop"
+        When I click on "add_to_cart" button
+        Then I should see a message "Product added to cart Successfully"
+
+
+    Scenario: Verify the product added to cart from product detail page has been updated to cart 
+        Given I am on the view cart page
+        Then I should see recently added product in the cart
+
+
+    Scenario Outline: Updating item quantity in the cart
+        Given I am on the view cart page
+        When I click on the "<button>" button of item "<Item>"
+        Then I should see total items "<status>" by one
+
+        Examples:
+        | Item       | button | status   |
+        | Laptop     | +      | increase |
+        | Smartphone | -      | decrease |
+        | Headphones | +      | increase |
+
 
     Scenario Outline: Deleting items from the cart
         Given I am on the view cart page
         When I click on "delete" button for item "<item>"
         Then I should see a message "Item removed successfully"
+        And the total number of items should be decrease by one 
 
         Examples:
         | Item       |
@@ -67,32 +105,12 @@ I want to search for a product and add it to cart
         | watch      |
 
 
-    Scenario Outline: Updating item quantity in the cart
-        Given I am on the view cart page
-        When I click on the "<button>" button of item "<Item>"
-        Then I should see a message "Quantity updated successfully"
-
-        Examples:
-        | Item       | button             |
-        | Laptop     | increase quantity  |
-        | Smartphone | decrease quantity  |
-        | Headphones | increase quantity  |
-
-
-    Scenario: Adding new product to the cart from product search page
-        Given I am on the view cart page
-        When I enter a product name as "phone" into the search bar
-        Then I should see a message "Showing result for Phone"
-        When I click on "add_to_cart" button for a particular product 
-        Then I should see a message "Item added to cart successfully"
-
-
     Scenario: Verifying Subtotal on View Cart Page
         Given I am on the view cart page
         When I calculate the sum of the prices of all items in the cart
         Then the displayed subtotal should match the calculated sum
         And I should see the subtotal of all items
-   
+
 
     Scenario Outline: Display subtotal for selected items in cart
         Given I am on the view cart page
@@ -107,14 +125,6 @@ I want to search for a product and add it to cart
         | Tablet, Speaker      |
 
 
-    # Invalid product search
-
-    Scenario: Search for a Product with No Results Found
-        Given I am on home page
-        When I enter a product name as "nonexistent_product" into the search bar
-        Then I should see a message "No results found"
-
-
     # Product is out of stock
 
     Scenario: Attempt to Add Out of Stock Product to Cart
@@ -123,15 +133,14 @@ I want to search for a product and add it to cart
         When I click on "add_to_cart" button
         Then I should see a message "This product is currently out of stock"
 
+
     Scenario Outline: Attempt to Add More Items Than Available Stock to Cart
         Given I am on the product details page of "laptop"
-        And the available stock for the product "limited_stock_product" is "<available_stock>"
+        And the available stock for the product "laptop" is "<available_stock>"
         And I have already added "<current_quantity>" of the product to the cart
         When I attempt to add "<additional_quantity>" more of the product to the cart
         Then I should see a message "The quantity limit for this product has been reached"
 
         Examples:
         | available_stock | current_quantity | additional_quantity |
-        | 10              | 5                | 6                   |
-
-    
+        | 5               | 5                | 1                   |

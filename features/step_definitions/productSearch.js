@@ -79,6 +79,7 @@ When('I click on {string} button', async function (button) {
     }
 });
 
+
 When('I search with empty field'), async function(){
     let element = await driver.wait(until.elementLocated(By.css('[data-testid="search_bar"]')));
     await driver.wait(until.elementIsVisible(element))
@@ -154,6 +155,10 @@ Given('I am on the view cart page', async function () {
   await driver.get(global.product_detail);
   await new Promise(resolve => setTimeout(resolve, 500));
   await driver.wait(until.elementLocated(By.xpath('//*[text()="Shopping Cart"]')));
+
+  let totalItems = await driver.wait(until.elementLocated(By.id('total-items')));
+  let subtotalText = await totalItems.getText();
+  let initialTotalItems = Number(subtotalText);
 });
 
 
@@ -172,9 +177,7 @@ Then('the displayed subtotal should match the calculated sum', async function ()
   let subtotalElement = await driver.findElement(By.css('SUBTOTAL_SELECTOR'));
   let subtotalText = await subtotalElement.getText();
   let subtotal = parseFloat(subtotalText.replace(/[^0-9.]/g, "")); 
-  if (subtotal !== totalCalculatedSum) {
-      throw new Error(`The displayed subtotal (${subtotal}) does not match the calculated sum of item prices (${totalCalculatedSum}).`);
-  }
+  assert.strictEqual(subtotal, totalCalculatedSum, `The displayed subtotal (${subtotal}) does not match the calculated sum of item prices (${totalCalculatedSum}).`);
 }); 
 
 
@@ -186,8 +189,32 @@ Then('I should see the subtotal of all items', async function () {
 
 
 When('I click on "delete" button for item {string}', async function (itemName) {
-  let deleteButton = await driver.wait(until.elementLocated(By.css('delete_btn')));
+  let deleteButton = await driver.wait(until.elementLocated(By.css(`[data-testid="delete_btn_${itemName}"]`)));
   await deleteButton.click();
+});
+
+
+Then('the total number of items should be decrease by one', async function () {
+  let currentTotalItems = await driver.wait(until.elementLocated(By.id('total-items'))).getText();
+  currentTotalItems = Number(currentTotalItems);
+  assert.strictEqual(initialTotalItems - 1, currentTotalItems, 'The total number of items did not decrease by one');
+  initialTotalItems = currentTotalItems;
+});
+
+Then('I should see total items {string} by one', async function (status) {
+  let currentTotalItems = await driver.wait(until.elementLocated(By.id('total-items'))).getText();
+  currentTotalItems = Number(currentTotalItems);
+  switch (status) {
+    case 'increase':
+      assert.strictEqual(initialTotalItems + 1, currentTotalItems, 'The total number of items did not increase by one');
+      break;
+    case 'decrease':
+      assert.strictEqual(initialTotalItems - 1, currentTotalItems, 'The total number of items did not decrease by one');
+      break;
+    default:
+      throw new Error(`Invalid status: ${status}. Expected 'increase' or 'decrease'.`);
+  }
+  initialTotalItems = currentTotalItems;
 });
 
 
@@ -197,21 +224,26 @@ When('I click on the {string} button of item {string}', async function (buttonNa
 });
 
 
-When('I click on {string} button for a particular product', async function (addToCart) {
+When('I click on {string} button for the first product', async function (addToCart1) {
   for (let loop = 100; loop > 0; loop--) {
     await driver.manage().setTimeouts({ pageLoad: 300 });
     let pageSource = await driver.getPageSource();
-    let check = pageSource.includes(button); 
-      if (check) {
-        await driver.wait(until.elementLocated(By.css('[data-testid="addToCart"]'))).click();
-      }
+    let check = pageSource.includes(addToCart1); 
+    if (check) {
+      let productNameElement = await driver.wait(until.elementLocated(By.css('[data-testid="productName1"]')));
+      productName = await productNameElement.getText();
+
+      await driver.wait(until.elementLocated(By.css('[data-testid="addToCart1"]'))).click();
+  }
   }
 });
 
 
-Then('I see the details of the product', function (itemName) {
-
+Then('I should see recently added product in the cart', async function () {
+    let pageSource = await driver.getPageSource();
+    assert(pageSource.includes(productName), `The product name ${productName} is not found in the cart.`);
 });
+
 
 let selectedItemsPrices = [];
 
@@ -237,9 +269,7 @@ Then('I should see the subtotal of only the selected items', async function () {
     let subtotalText = await subtotalElement.getText();
     let subtotal = parseFloat(subtotalText.replace(/[^0-9.]/g, ""));
 
-    if (subtotal !== expectedSubtotal) {
-        throw new Error(`The displayed subtotal (${subtotal}) does not match the expected subtotal of the selected items (${expectedSubtotal}).`);
-    }
+    assert.strictEqual(subtotal, expectedSubtotal, `The displayed subtotal (${subtotal}) does not match the expected subtotal of item prices (${expectedSubtotal}).`);
 });
 
 
@@ -251,21 +281,36 @@ Given('I am on the product details page of {string}', async function (productNam
 });
 
 
-Given('the product {string} is out of stock', function (productName) {
+Given('the product {string} is out of stock', async function (productName) {
+  let productStatus = await driver.wait(until.elementLocated(By.id('product-status')));
+  let statusText = await productStatus.getText();
 
+  if (statusText === 'Out of stock') {
+      return 'passed'
+  }
 });
 
 
-Given('the available stock for the product {string} is {string}', function (productName, availableStock) {
+Given('the available stock for the product {string} is {string}', async function (productName, availableStock) {
+  let productStock = await this.driver.findElement(By.id('product-stock'));
+  let stockText = await productStock.getText();
 
+  assert.strictEqual(stockText, availableStock, `The displayed stocktext (${stockText}) does not match the available stock for the item (${availableStock}).`);
 });
 
 
-Given('I have already added {string} of the product to the cart', function (currentQuantity) {
-
+Given('I have already added {string} of the product to the cart', async function (currentQuantity) {
+  let quantityElement = await driver.wait(until.elementLocated(By.id('cart-product-quantity')));
+  let quantityText = await quantityElement.getText();
+  if (quantityText !== currentQuantity) {
+      return 'passed'    
+  }
 });
 
 
-When('I attempt to add {string} more of the product to the cart', function (additionalQuantity) {
-
+When('I attempt to add {string} more of the product to the cart', async function (additionalQuantity) {
+  let addToCartButton = await driver.wait(until.elementLocated(By.id('add-to-cart-button')));
+  for (let i = 0; i < parseInt(additionalQuantity); i++) {
+      await addToCartButton.click();
+  }
 });
