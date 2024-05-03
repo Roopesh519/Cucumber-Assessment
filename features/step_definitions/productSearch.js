@@ -2,6 +2,7 @@ const assert = require('assert');
 const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
 
 const axios = require('axios');
+const { error } = require('console');
 
 let product_detail;
 let shopping_cart;
@@ -40,6 +41,7 @@ When('I enter a product name as {string} into the search bar', async function (p
 
 
 Then('I should see a list of products that match the search query', async function () {
+  
     for (let loop = 100; loop > 0; loop--) {
         await driver.manage().setTimeouts({ pageLoad: 300 });
         let pageSource = await driver.getPageSource();
@@ -48,11 +50,13 @@ Then('I should see a list of products that match the search query', async functi
               return 'passed'
         }
       }
+      throw error
 });
 
 
 When('I click on {string} button', async function (button) {
     for (let loop = 100; loop > 0; loop--) {
+
         await driver.manage().setTimeouts({ pageLoad: 300 });
         let pageSource = await driver.getPageSource();
         let check = pageSource.includes(button); 
@@ -92,6 +96,7 @@ When('I select the price as 10000 - 20000', async function() {
       let select = await driver.wait(untill.elementLocated(By.css('[data-testid="price_dropdown"]')));
       await select.click();
       await driver.findElement(By.xpath("//option[. = '10000 - 20000']")).click();
+
 });
 
 
@@ -99,6 +104,7 @@ When('I select the brand as asus', async function() {
       let select = await driver.wait(untill.elementLocated(By.css('[data-testid="brand_dropdown"]')));
       await select.click();
       await driver.findElement(By.xpath("//option[. = 'asus']")).click();
+
 });
 
 
@@ -106,6 +112,7 @@ When('I select the screen-size as 15 inches', async function() {
       let select = await driver.wait(untill.elementLocated(By.css('[data-testid="screensize_dropdown"]')));
       await select.click();
       await driver.findElement(By.xpath("//option[. = '15 inches']")).click();
+
 });
 
 
@@ -113,6 +120,7 @@ When('I select the processor as intel i5', async function() {
       let select = await driver.wait(untill.elementLocated(By.css('[data-testid="processor_dropdown"]')));
       await select.click();
       await driver.findElement(By.xpath("//option[. = 'intel i5']")).click();
+
 });
 
 
@@ -134,6 +142,7 @@ When('I click on a particular product from results', async function (){
       let pageSource = await driver.getPageSource();
       let check = pageSource.includes(Results); 
       if (check) {
+
         await driver.wait(until.elementLocated(By.css('[data-testid="search-results_1"]'))).click();
       }
     }
@@ -158,13 +167,14 @@ Given('I am on the view cart page', async function () {
 
   let totalItems = await driver.wait(until.elementLocated(By.id('total-items')));
   let subtotalText = await totalItems.getText();
+
   let initialTotalItems = Number(subtotalText);
 });
 
 
 When('I calculate the sum of the prices of all items in the cart', async function () {
-  let priceElements = await driver.wait(until.elementLocated(By.css('[data-testid="item_price_selector"]')));
-  totalCalculatedSum = 0;
+  let priceElements = await driver.wait(until.elementsLocated(By.css('[data-testid="item_price_selector"]')));
+  this.totalCalculatedSum = 0;
   for (let priceElement of priceElements) {
       let priceText = await priceElement.getText();
       let price = parseFloat(priceText.replace(/[^0-9.]/g, "")); 
@@ -174,7 +184,7 @@ When('I calculate the sum of the prices of all items in the cart', async functio
 
 
 Then('the displayed subtotal should match the calculated sum', async function () {
-  let subtotalElement = await driver.findElement(By.css('SUBTOTAL_SELECTOR'));
+  let subtotalElement = await driver.wait(until.elementLocate(By.css('[data-testid="subtotal"]')));
   let subtotalText = await subtotalElement.getText();
   let subtotal = parseFloat(subtotalText.replace(/[^0-9.]/g, "")); 
   assert.strictEqual(subtotal, totalCalculatedSum, `The displayed subtotal (${subtotal}) does not match the calculated sum of item prices (${totalCalculatedSum}).`);
@@ -182,7 +192,7 @@ Then('the displayed subtotal should match the calculated sum', async function ()
 
 
 Then('I should see the subtotal of all items', async function () {
-  let subtotalElement = await driver.findElement(By.css('subtotal'));
+  let subtotalElement = await driver.wait(until.elementLocate(By.css('[data-testid="subtotal"]')));
   let subtotal = await subtotalElement.getText();
   console.log(`The subtotal is: ${subtotal}`);
 });
@@ -229,6 +239,7 @@ When('I click on {string} button for the first product', async function (addToCa
     await driver.manage().setTimeouts({ pageLoad: 300 });
     let pageSource = await driver.getPageSource();
     let check = pageSource.includes(addToCart1); 
+    
     if (check) {
       let productNameElement = await driver.wait(until.elementLocated(By.css('[data-testid="productName1"]')));
       productName = await productNameElement.getText();
@@ -261,7 +272,7 @@ When('I select the checkbox of specific items {string}', async function (selecte
     }
 });
 
-
+// updte?
 Then('I should see the subtotal of only the selected items', async function () {
     let expectedSubtotal = selectedItemsPrices.reduce((a, b) => a + b, 0);
 
