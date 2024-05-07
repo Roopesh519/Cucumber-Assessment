@@ -26,7 +26,9 @@ I want to search for a product and add it to cart
         And I select the processor as intel i5
         And I click on "apply_filter" button
         Then I should see a message "Filter Applied Successfully"
-
+        #changes required
+        And I should see the products with filters applied
+   
    
     Scenario: Viewing product details
         Given I am on home page

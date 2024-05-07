@@ -13,15 +13,7 @@ Before(async function(productName){
             email: "admin@gmail.com"
         }
     });
-
-    let response2 = await axios.get('https://www.amazon.in/gp/cart/view.html', {
-        params: {
-            email: "admin@gmail.com"
-        }
-    });
-
     product_detail = response1.data.link;
-    shopping_cart = response2.data.link;
 });
 
 
@@ -50,19 +42,13 @@ Then('I should see a list of products that match the search query', async functi
               return 'passed'
         }
       }
-      throw error
+      throw new Error('The search query did not match any products');
 });
 
 
 When('I click on {string} button', async function (button) {
-    for (let loop = 100; loop > 0; loop--) {
 
-        await driver.manage().setTimeouts({ pageLoad: 300 });
-        let pageSource = await driver.getPageSource();
-        let check = pageSource.includes(button); 
-        if (check) {
           let buttonElement;
-    
           switch(button) {
               case 'Filter':
                   buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="filter"]')));
@@ -70,6 +56,7 @@ When('I click on {string} button', async function (button) {
               case 'apply_filter':
                   buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="apply_filter"]')));
                   break;
+        // this. something for custom button click 
               case 'add_to_cart':
                   buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="add_to_cart"]')));
                   break;
@@ -79,8 +66,6 @@ When('I click on {string} button', async function (button) {
                   return; 
           }
           await buttonElement.click();
-        }
-    }
 });
 
 
@@ -124,6 +109,11 @@ When('I select the processor as intel i5', async function() {
 });
 
 
+Then('I should see the products with filters applied', async function(){
+
+});
+
+
 Then('I should see a message {string}', async function (message) {
     for (let loop = 100; loop > 0; loop--) {
         await driver.manage().setTimeouts({ pageLoad: 300 });
@@ -161,7 +151,7 @@ Then('I should see the product details', async function () {
 
 
 Given('I am on the view cart page', async function () {
-  await driver.get(global.product_detail);
+  await driver.get('https://www.amazon.in/gp/cart/view.html');
   await new Promise(resolve => setTimeout(resolve, 500));
   await driver.wait(until.elementLocated(By.xpath('//*[text()="Shopping Cart"]')));
 
@@ -198,7 +188,7 @@ Then('I should see the subtotal of all items', async function () {
 });
 
 
-When('I click on "delete" button for item {string}', async function (itemName) {
+When('I click on {string} button for item {string}', async function (itemName) {
   let deleteButton = await driver.wait(until.elementLocated(By.css(`[data-testid="delete_btn_${itemName}"]`)));
   await deleteButton.click();
 });
@@ -210,6 +200,7 @@ Then('the total number of items should be decrease by one', async function () {
   assert.strictEqual(initialTotalItems - 1, currentTotalItems, 'The total number of items did not decrease by one');
   initialTotalItems = currentTotalItems;
 });
+
 
 Then('I should see total items {string} by one', async function (status) {
   let currentTotalItems = await driver.wait(until.elementLocated(By.id('total-items'))).getText();
@@ -272,6 +263,7 @@ When('I select the checkbox of specific items {string}', async function (selecte
     }
 });
 
+
 // updte?
 Then('I should see the subtotal of only the selected items', async function () {
     let expectedSubtotal = selectedItemsPrices.reduce((a, b) => a + b, 0);
@@ -282,7 +274,6 @@ Then('I should see the subtotal of only the selected items', async function () {
 
     assert.strictEqual(subtotal, expectedSubtotal, `The displayed subtotal (${subtotal}) does not match the expected subtotal of item prices (${expectedSubtotal}).`);
 });
-
 
 
 Given('I am on the product details page of {string}', async function (productName) {
