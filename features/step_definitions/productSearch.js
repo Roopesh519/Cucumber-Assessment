@@ -5,7 +5,6 @@ const axios = require('axios');
 const { error } = require('console');
 
 let product_detail;
-let shopping_cart;
 
 Before(async function(productName){
     let response1 = await axios.get(`https://amazon.in/${productName}`, {
@@ -47,7 +46,6 @@ Then('I should see a list of products that match the search query', async functi
 
 
 When('I click on {string} button', async function (button) {
-
           let buttonElement;
           switch(button) {
               case 'Filter':
@@ -78,39 +76,51 @@ When('I search with empty field'), async function(){
 
 
 When('I select the price as 10000 - 20000', async function() {
-      let select = await driver.wait(untill.elementLocated(By.css('[data-testid="price_dropdown"]')));
-      await select.click();
-      await driver.findElement(By.xpath("//option[. = '10000 - 20000']")).click();
-
+  let select = await driver.wait(untill.elementLocated(By.css('[data-testid="price_dropdown"]')));
+  await select.click();
+  await driver.findElement(By.xpath("//option[. = '10000 - 20000']")).click();
+  this.price = ['10000', '20000']; // Store price as a range
 });
 
 
 When('I select the brand as asus', async function() {
-      let select = await driver.wait(untill.elementLocated(By.css('[data-testid="brand_dropdown"]')));
-      await select.click();
-      await driver.findElement(By.xpath("//option[. = 'asus']")).click();
-
+  let select = await driver.wait(untill.elementLocated(By.css('[data-testid="brand_dropdown"]')));
+  await select.click();
+  await driver.findElement(By.xpath("//option[. = 'asus']")).click();
+  this.brand = 'asus';
 });
 
 
 When('I select the screen-size as 15 inches', async function() {
-      let select = await driver.wait(untill.elementLocated(By.css('[data-testid="screensize_dropdown"]')));
-      await select.click();
-      await driver.findElement(By.xpath("//option[. = '15 inches']")).click();
-
+  let select = await driver.wait(untill.elementLocated(By.css('[data-testid="screensize_dropdown"]')));
+  await select.click();
+  await driver.findElement(By.xpath("//option[. = '15 inches']")).click();
+  this.screensize = '15 inches';
 });
 
 
 When('I select the processor as intel i5', async function() {
-      let select = await driver.wait(untill.elementLocated(By.css('[data-testid="processor_dropdown"]')));
-      await select.click();
-      await driver.findElement(By.xpath("//option[. = 'intel i5']")).click();
-
+  let select = await driver.wait(untill.elementLocated(By.css('[data-testid="processor_dropdown"]')));
+  await select.click();
+  await driver.findElement(By.xpath("//option[. = 'intel i5']")).click();
+  this.processor = 'intel i5';
 });
 
 
 Then('I should see the products with filters applied', async function(){
+  let products = await driver.wait(until.elementLocated(By.css('[data-testid="search-results"]')));
 
+  for(let product of products) {
+      let price = await product.findElement(By.css('[data-testid="price"]')).getText();
+      let brand = await product.findElement(By.css('[data-testid="brand"]')).getText();
+      let screenSize = await product.findElement(By.css('[data-testid="screen_size"]')).getText();
+      let processor = await product.findElement(By.css('[data-testid="processor"]')).getText();
+      let priceNumber = parseFloat(price.replace(/[^0-9.-]+/g,""));
+      assert(priceNumber >= parseFloat(this.price[0]) && priceNumber <= parseFloat(this.price[1]), 'Price is not within the selected range');
+      assert.equal(brand, this.brand);
+      assert.equal(screenSize, this.screensize);
+      assert.equal(processor, this.processor);
+  }
 });
 
 
@@ -127,15 +137,7 @@ Then('I should see a message {string}', async function (message) {
 
 
 When('I click on a particular product from results', async function (){
-    for (let loop = 100; loop > 0; loop--) {
-      await driver.manage().setTimeouts({ pageLoad: 300 });
-      let pageSource = await driver.getPageSource();
-      let check = pageSource.includes(Results); 
-      if (check) {
-
         await driver.wait(until.elementLocated(By.css('[data-testid="search-results_1"]'))).click();
-      }
-    }
 });
 
 
@@ -154,11 +156,10 @@ Given('I am on the view cart page', async function () {
   await driver.get('https://www.amazon.in/gp/cart/view.html');
   await new Promise(resolve => setTimeout(resolve, 500));
   await driver.wait(until.elementLocated(By.xpath('//*[text()="Shopping Cart"]')));
+  let subtotalText = await driver.wait(until.elementLocated(By.id('total-items'))).getText();
+  global.initialTotalItems = Number(subtotalText);
 
-  let totalItems = await driver.wait(until.elementLocated(By.id('total-items')));
-  let subtotalText = await totalItems.getText();
-
-  let initialTotalItems = Number(subtotalText);
+  // ----
 });
 
 
@@ -197,20 +198,20 @@ When('I click on {string} button for item {string}', async function (itemName) {
 Then('the total number of items should be decrease by one', async function () {
   let currentTotalItems = await driver.wait(until.elementLocated(By.id('total-items'))).getText();
   currentTotalItems = Number(currentTotalItems);
-  assert.strictEqual(initialTotalItems - 1, currentTotalItems, 'The total number of items did not decrease by one');
-  initialTotalItems = currentTotalItems;
+  assert.strictEqual(global.initialTotalItems - 1, currentTotalItems, 'The total number of items did not decrease by one');
+  global.initialTotalItems = currentTotalItems;
 });
 
 
-Then('I should see total items {string} by one', async function (status) {
-  let currentTotalItems = await driver.wait(until.elementLocated(By.id('total-items'))).getText();
-  currentTotalItems = Number(currentTotalItems);
+Then('I should see quantity of {string} {string} by one', async function (status) {
+  let currentItemQuantity = await driver.wait(until.elementLocated(By.id(`${item}_quantity`))).getText();
+  currentItemQuantity = Number(currentItemQuantity);
   switch (status) {
     case 'increase':
-      assert.strictEqual(initialTotalItems + 1, currentTotalItems, 'The total number of items did not increase by one');
+      assert.strictEqual(initialTotalItems + 1, currentItemQuantity, 'The total number of items did not increase by one');
       break;
     case 'decrease':
-      assert.strictEqual(initialTotalItems - 1, currentTotalItems, 'The total number of items did not decrease by one');
+      assert.strictEqual(initialTotalItems - 1, currentItemQuantity, 'The total number of items did not decrease by one');
       break;
     default:
       throw new Error(`Invalid status: ${status}. Expected 'increase' or 'decrease'.`);
@@ -233,8 +234,7 @@ When('I click on {string} button for the first product', async function (addToCa
     
     if (check) {
       let productNameElement = await driver.wait(until.elementLocated(By.css('[data-testid="productName1"]')));
-      productName = await productNameElement.getText();
-
+      global.productName = await productNameElement.getText();
       await driver.wait(until.elementLocated(By.css('[data-testid="addToCart1"]'))).click();
   }
   }
@@ -243,11 +243,11 @@ When('I click on {string} button for the first product', async function (addToCa
 
 Then('I should see recently added product in the cart', async function () {
     let pageSource = await driver.getPageSource();
-    assert(pageSource.includes(productName), `The product name ${productName} is not found in the cart.`);
+    assert(pageSource.includes(global.productName), `The product name ${global.productName} is not found in the cart.`);
 });
 
 
-let selectedItemsPrices = [];
+global.selectedItemsPrices = [];
 
 When('I select the checkbox of specific items {string}', async function (selectedItems) {
     let items = selectedItems.split(',');
@@ -255,23 +255,20 @@ When('I select the checkbox of specific items {string}', async function (selecte
     for (let item of items) {
         let checkbox = await driver.driver.wait(until.elementLocated(By.css(`[data-testid="${item.trim()}_checkbox"]`)));
         await checkbox.click();
-
         let priceElement = await driver.driver.wait(until.elementLocated(By.css(`[data-testid="${item.trim()}_price"]`)));
         let priceText = await priceElement.getText();
         let price = parseFloat(priceText.replace(/[^0-9.]/g, ""));
-        selectedItemsPrices.push(price);
+        global.selectedItemsPrices.push(price);
     }
 });
 
 
 // updte?
 Then('I should see the subtotal of only the selected items', async function () {
-    let expectedSubtotal = selectedItemsPrices.reduce((a, b) => a + b, 0);
-
+    let expectedSubtotal = global.selectedItemsPrices.reduce((a, b) => a + b, 0);
     let subtotalElement = await driver.wait(until.elementLocated(By.css('subtotal')));
     let subtotalText = await subtotalElement.getText();
     let subtotal = parseFloat(subtotalText.replace(/[^0-9.]/g, ""));
-
     assert.strictEqual(subtotal, expectedSubtotal, `The displayed subtotal (${subtotal}) does not match the expected subtotal of item prices (${expectedSubtotal}).`);
 });
 
@@ -279,7 +276,7 @@ Then('I should see the subtotal of only the selected items', async function () {
 Given('I am on the product details page of {string}', async function (productName) {
   await driver.get(global.product_detail);
   await new Promise(resolve => setTimeout(resolve, 500));
-  await driver.wait(until.elementLocated(By.xpath('//*[text()="${productName}"]')));
+  await driver.wait(until.elementLocated(By.xpath(`//*[text()="${productName}"]`)));
 });
 
 
@@ -296,7 +293,6 @@ Given('the product {string} is out of stock', async function (productName) {
 Given('the available stock for the product {string} is {string}', async function (productName, availableStock) {
   let productStock = await this.driver.findElement(By.id('product-stock'));
   let stockText = await productStock.getText();
-
   assert.strictEqual(stockText, availableStock, `The displayed stocktext (${stockText}) does not match the available stock for the item (${availableStock}).`);
 });
 

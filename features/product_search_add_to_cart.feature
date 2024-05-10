@@ -65,12 +65,13 @@ I want to search for a product and add it to cart
         Then I should see a message "Item added to cart successfully"
 
 
-    @get_cart
+    
     Scenario: Verify the product added to cart from home page has been updated to cart 
         Given I am on the view cart page
         Then I should see recently added product in the cart
 
 
+    @get_product_detais
     Scenario: Adding product to cart from Product details page
         Given I am on the product details page of "laptop"
         When I click on "add_to_cart" button
@@ -85,7 +86,7 @@ I want to search for a product and add it to cart
     Scenario Outline: Updating item quantity in the cart
         Given I am on the view cart page
         When I click on the "<button>" button of item "<Item>"
-        Then I should see total items "<status>" by one
+        Then I should see the quantity of "<Item>" "<status>" by one
 
         Examples:
         | Item       | button | status   |
@@ -128,7 +129,8 @@ I want to search for a product and add it to cart
 
 
     # Product is out of stock
-
+    
+    @get_product_detais
     Scenario: Attempt to Add Out of Stock Product to Cart
         Given I am on the product details page of "laptop"
         # And the product "out_of_stock_product" is out of stock

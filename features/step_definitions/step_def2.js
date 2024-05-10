@@ -27,11 +27,6 @@ Given('I am on the password reset screen', async function () {
 });
 
 When("I click on {string} button", async function (button) {
-    for (let loop = 100; loop > 0; loop--) {
-        await driver.manage().setTimeouts({ pageLoad: 300 });
-        let pageSource = await driver.getPageSource();
-        let check = pageSource.includes(button); 
-        if (check) {
             let buttonElement;
     
             switch(button) {
@@ -46,8 +41,6 @@ When("I click on {string} button", async function (button) {
                     return; 
             }
             await buttonElement.click();
-        }
-    }
 });
 
 
