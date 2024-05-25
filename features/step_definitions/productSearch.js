@@ -290,6 +290,11 @@ Given('the product {string} is out of stock', async function (productName) {
 });
 
 
+When('I click on "{string}" for an out of stock product', async function (addToCart) {
+  let addToCart = await driver.wait(until.elementLocated(By.id('addToCart'))).click();
+});
+
+
 Given('the available stock for the product {string} is {string}', async function (productName, availableStock) {
   let productStock = await this.driver.findElement(By.id('product-stock'));
   let stockText = await productStock.getText();

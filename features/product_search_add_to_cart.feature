@@ -133,8 +133,7 @@ I want to search for a product and add it to cart
     @get_product_detais
     Scenario: Attempt to Add Out of Stock Product to Cart
         Given I am on the product details page of "laptop"
-        # And the product "out_of_stock_product" is out of stock
-        # When I click on "add_to_cart" button
+        When I click on "add_cart_button" for an out of stock product
         Then I should see a message "This product is currently out of stock"
 
 
