@@ -136,7 +136,7 @@ Then('I should see a message {string}', async function (message) {
 });
 
 
-When('I click on a particular product from results', async function (){
+When('I click on a first product from results', async function (){
         await driver.wait(until.elementLocated(By.css('[data-testid="search-results_1"]'))).click();
 });
 
@@ -168,7 +168,7 @@ When('I calculate the sum of the prices of all items in the cart', async functio
   this.totalCalculatedSum = 0;
   for (let priceElement of priceElements) {
       let priceText = await priceElement.getText();
-      let price = parseFloat(priceText.replace(/[^0-9.]/g, "")); 
+      let price = parseFloat(priceText.replace(/[^0-9.]/g, ""));
       totalCalculatedSum += price;
   }
 });
@@ -177,9 +177,9 @@ When('I calculate the sum of the prices of all items in the cart', async functio
 Then('the displayed subtotal should match the calculated sum', async function () {
   let subtotalElement = await driver.wait(until.elementLocate(By.css('[data-testid="subtotal"]')));
   let subtotalText = await subtotalElement.getText();
-  let subtotal = parseFloat(subtotalText.replace(/[^0-9.]/g, "")); 
+  let subtotal = parseFloat(subtotalText.replace(/[^0-9.]/g, ""));
   assert.strictEqual(subtotal, totalCalculatedSum, `The displayed subtotal (${subtotal}) does not match the calculated sum of item prices (${totalCalculatedSum}).`);
-}); 
+});
 
 
 Then('I should see the subtotal of all items', async function () {
@@ -230,7 +230,7 @@ When('I click on {string} button for the first product', async function (addToCa
   for (let loop = 100; loop > 0; loop--) {
     await driver.manage().setTimeouts({ pageLoad: 300 });
     let pageSource = await driver.getPageSource();
-    let check = pageSource.includes(addToCart1); 
+    let check = pageSource.includes(addToCart1);
     
     if (check) {
       let productNameElement = await driver.wait(until.elementLocated(By.css('[data-testid="productName1"]')));
@@ -290,7 +290,7 @@ Given('the product {string} is out of stock', async function (productName) {
 });
 
 
-When('I click on "{string}" for an out of stock product', async function (addToCart) {
+When('I click on {string} for an out of stock product', async function (addToCart) {
   let addToCart = await driver.wait(until.elementLocated(By.id('addToCart'))).click();
 });
 
@@ -306,7 +306,7 @@ Given('I have already added {string} of the product to the cart', async function
   let quantityElement = await driver.wait(until.elementLocated(By.id('cart-product-quantity')));
   let quantityText = await quantityElement.getText();
   if (quantityText !== currentQuantity) {
-      return 'passed'    
+      return 'passed'
   }
 });
 

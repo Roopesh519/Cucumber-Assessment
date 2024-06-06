@@ -34,7 +34,7 @@ I want to search for a product and add it to cart
         Given I am on home page
         When I enter a product name as "laptop" into the search bar
         Then I should see a message "Showing Results for laptop"
-        When I click on a particular product from results
+        When I click on a first product from results
         Then I should see the product details
 
 
