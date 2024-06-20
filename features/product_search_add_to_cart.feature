@@ -7,7 +7,7 @@ I want to search for a product and add it to cart
         Given I am on home page
         When I enter a product name as "<Product>" into the search bar
         Then I should see a list of products that match the search query
-     
+
         Examples:
         | Product      |
         | Laptop       |
