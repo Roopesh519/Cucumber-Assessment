@@ -111,7 +111,7 @@ Then("I should see the list of products in {string} order",async function (order
     let prev = 0, 
     error = false;
     let val;
-    // await driver.wait(until.elementLocated(By.css(`[data-testid='']`)))
+    await driver.wait(until.elementLocated(By.css(`[data-testid='']`)))
     switch (order) {
       case "Price: Low to High":
         for (let i = 0; i < 10; i++) {
