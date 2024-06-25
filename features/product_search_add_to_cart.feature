@@ -26,7 +26,6 @@ I want to search for a product and add it to cart
         And I select the processor as intel i5
         And I click on "apply_filter" button
         Then I should see a message "Filter Applied Successfully"
-        #changes required
         And I should see the products with filters applied
    
    
@@ -65,7 +64,6 @@ I want to search for a product and add it to cart
         Then I should see a message "Item added to cart successfully"
 
 
-    
     Scenario: Verify the product added to cart from home page has been updated to cart 
         Given I am on the view cart page
         Then I should see recently added product in the cart
@@ -74,7 +72,7 @@ I want to search for a product and add it to cart
     @get_product_detais
     Scenario: Adding product to cart from Product details page
         Given I am on the product details page of "laptop"
-        When I click on "add_to_cart" button
+        When I click on "add_to_cart" button 
         Then I should see a message "Product added to cart Successfully"
 
 
@@ -136,14 +134,28 @@ I want to search for a product and add it to cart
         When I click on "add_cart_button" for an out of stock product
         Then I should see a message "This product is currently out of stock"
 
-
-    Scenario Outline: Attempt to Add More Items Than Available Stock to Cart
+    Scenario: Removing product from empty cart
+        Given I am on the view cart page
+        When I try to remove a product from an empty cart
+        Then I should see a message "Your cart is empty"
+    
+    Scenario: Adding a product to favorites when not signed in
         Given I am on the product details page of "laptop"
-        # And the available stock for the product "laptop" is "<available_stock>"
-        And I have already added "<current_quantity>" of the product to the cart
-        When I attempt to add "<additional_quantity>" more of the product to the cart
-        Then I should see a message "The quantity limit for this product has been reached"
+        And I am not signed in
+        When I click to add a product to favorites
+        Then I should be redirected to sign in page
 
-        Examples:
-        | available_stock | current_quantity | additional_quantity |
-        | 5               | 5                | 1                   |
+    Scenario: Product is out of stock, add to favorites
+        Given I am on the product details page of "laptop"
+        And the product is out of stock
+        When I click on "add to favorites" button
+        And I click on "view my favorites" button
+        Then I should see the product added to my favorites list
+        And I should see a message "Product added to your favorites"
+
+    Scenario: Removing all products from my cart
+        Given I am on the view cart page
+        When I click on "remove all products from my cart" button
+        Then I should see a message "Your cart is empty, Nothing to purchase"
+        When I click on "go back to shopping" button
+        Then I should be redirected to home page

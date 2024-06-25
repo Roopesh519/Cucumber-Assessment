@@ -1,18 +1,22 @@
 const assert = require('assert'); 
 const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
+const { By, Key, Builder, until, Select} = require('selenium-webdriver')
+const assert = require('assert');
+const faker  = require('faker');
 
 const axios = require('axios');
 const { error } = require('console');
 
 let product_detail;
 
-Before(async function(productName){
-    let response1 = await axios.get(`https://amazon.in/${productName}`, {
+Before('@get_product_detais', async function(productName){
+
+    let response = await axios.get(`https://amazon.in/${productName}`, {
         params: {
-            email: "admin@gmail.com"
+            product_name: 'asus tuf a15',
         }
     });
-    product_detail = response1.data.link;
+    global.product_detail = response.data.product_name;
 });
 
 
@@ -295,25 +299,48 @@ When('I click on {string} for an out of stock product', async function (addToCar
 });
 
 
-Given('the available stock for the product {string} is {string}', async function (productName, availableStock) {
-  let productStock = await this.driver.findElement(By.id('product-stock'));
-  let stockText = await productStock.getText();
-  assert.strictEqual(stockText, availableStock, `The displayed stocktext (${stockText}) does not match the available stock for the item (${availableStock}).`);
+When('I try to remove a product from an empty cart', async function (){
+  let deleteAllButton = await driver.wait(until.elementLocated(By.css(`[data-testid="delete-all_btn"]`)));
+  await deleteAllButton.click();
+}) 
+
+Then('I should be redirected to sign in page', async function(){
+  await driver.wait(until.elementLocated(By.xpath(`//*[text()="Sign In"]`)));
 });
 
-
-Given('I have already added {string} of the product to the cart', async function (currentQuantity) {
-  let quantityElement = await driver.wait(until.elementLocated(By.id('cart-product-quantity')));
-  let quantityText = await quantityElement.getText();
-  if (quantityText !== currentQuantity) {
-      return 'passed'
-  }
+Given('I am not signed in', async function(){
+  const signInTextElement = await driver.wait(until.elementLocated(By.id('sign-in')));
+  const actualText = await signInTextElement.getText();
+  assert.strictEqual(actualText, 'Sign In', `The user is not logged in`);
 });
 
+When('I click to add a product to favorites', async function(){
+  await driver.wait(until.elementLocated(By.css('[data-testid="add-to-my-favorites"]'))).click();
+ });
 
-When('I attempt to add {string} more of the product to the cart', async function (additionalQuantity) {
-  let addToCartButton = await driver.wait(until.elementLocated(By.id('add-to-cart-button')));
-  for (let i = 0; i < parseInt(additionalQuantity); i++) {
-      await addToCartButton.click();
-  }
+ Then('I should be re-directed to sign in', async function(){
+  await driver.wait(until.elementLocated(By.xpath(`//*[text()="Sign In"]`)));
 });
+
+Given('the product is out of stock', async function(){
+  this.outOfStockproductName = await driver.wait(until.elementLocated(By.css('[data-testid="product-name"]'))).getText();
+  let status = await driver.wait(until.elementLocated(By.css('[data-testid="availability_of_productId"]'))).getText();
+  assert.strictEqual(status, 'Out of Stock');
+ });
+
+Then('I should see the product added to my favorites list', async function(){
+  await driver.wait(until.urlContains('my_favorites'));
+  await driver.wait(until.elementLocated(By.xpath(`//*[text()="Saved products"]`)));
+ 
+  let favorites = await driver.wait(until.elementsLocated(By.css('[data-testid="my-favorites-list"]')));
+  let favListNames = await Promise.all(favorites.map(item => item.getText()));
+ 
+  if (favListNames.includes(this.outOfStockproductName))
+  return 'passed';
+  });
+ 
+  Then('I should be redirected to home page', async function(){
+    await driver.wait(until.urlContains('home'));
+    let homePageText = await driver.wait(until.elementLocated(By.xpath(`//*[text()="Welcome to Our Home Page"]`)));
+    await driver.wait(until.elementIsVisible(homePageText));
+   });
