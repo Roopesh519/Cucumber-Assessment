@@ -146,4 +146,4 @@ I want to search for a product and add it to cart
 
         Examples:
         | available_stock | current_quantity | additional_quantity |
-        | 5               | 5                | 12                  |
+        | 5               | 5                | 1                   |
