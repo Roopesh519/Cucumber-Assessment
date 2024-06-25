@@ -5,8 +5,8 @@ I want to search for a product and add it to cart
 
     Scenario Outline: Search for a Product
         Given I am on home page
-        When I enter a product name as "<Product>" into the search bar
-        Then I should see a list of products that match the search query
+        When I enter a product name as "<Product>" into the search bar --- this
+        Then I should see a list of products that match the search query --- compare/assert
 
         Examples:
         | Product      |
@@ -62,10 +62,7 @@ I want to search for a product and add it to cart
         Then I should see a message "Showing result for Phone"
         When I click on "add_to_cart" button for the first product 
         Then I should see a message "Item added to cart successfully"
-
-
-    Scenario: Verify the product added to cart from home page has been updated to cart 
-        Given I am on the view cart page
+        When I navigate to the view cart page
         Then I should see recently added product in the cart
 
 
@@ -83,27 +80,14 @@ I want to search for a product and add it to cart
 
     Scenario Outline: Updating item quantity in the cart
         Given I am on the view cart page
-        When I click on the "<button>" button of item "<Item>"
-        Then I should see the quantity of "<Item>" "<status>" by one
+        When I "<status>" quantity of first item
+        Then I should see the quantity of item "<status>" by one
 
         Examples:
-        | Item       | button | status   |
-        | Laptop     | +      | increase |
-        | Smartphone | -      | decrease |
-        | Headphones | +      | increase |
-
-
-    Scenario Outline: Deleting items from the cart
-        Given I am on the view cart page
-        When I click on "delete" button for item "<item>"
-        Then I should see a message "Item removed successfully"
-        And the total number of items should be decrease by one 
-
-        Examples:
-        | Item       |
-        | laptop     |
-        | phone      |
-        | watch      |
+        | status   |
+        | increase |
+        | decrease |
+        | increase |
 
 
     Scenario: Verifying Subtotal on View Cart Page
@@ -125,6 +109,11 @@ I want to search for a product and add it to cart
         | Smartphone           |
         | Tablet, Speaker      |
 
+    Scenario Outline: Deleting items from the cart
+        Given I am on the view cart page
+        When I click on delete button for the first item---------
+        Then I should see a message "Item removed successfully"
+        And the total number of items should be decrease by one 
 
     # Product is out of stock
     
@@ -134,11 +123,12 @@ I want to search for a product and add it to cart
         When I click on "add_cart_button" for an out of stock product
         Then I should see a message "This product is currently out of stock"
 
+    # Move to the top
     Scenario: Removing product from empty cart
         Given I am on the view cart page
-        When I try to remove a product from an empty cart
         Then I should see a message "Your cart is empty"
     
+    # Move to top
     Scenario: Adding a product to wish list when not signed in
         Given I am on the product details page of "laptop"
         And I am not signed in
@@ -149,10 +139,11 @@ I want to search for a product and add it to cart
         Given I am on the product details page of "laptop"
         And the product is out of stock
         When I click on "add to wish list" button
-        And I click on "view my wish list" button
+        Then I should see a message "Product added to your wishlist"
+        When I click on "view my wish list" button
         Then I should see the product added to my wish list
-        And I should see a message "Product added to your wishlist"
 
+    # Move to top before adding to cart
     Scenario: Removing all products from my cart
         Given I am on the view cart page
         When I click on "remove all products from my cart" button
