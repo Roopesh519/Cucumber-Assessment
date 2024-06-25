@@ -139,19 +139,19 @@ I want to search for a product and add it to cart
         When I try to remove a product from an empty cart
         Then I should see a message "Your cart is empty"
     
-    Scenario: Adding a product to favorites when not signed in
+    Scenario: Adding a product to wish list when not signed in
         Given I am on the product details page of "laptop"
         And I am not signed in
-        When I click to add a product to favorites
+        When I click to add a product to wish list
         Then I should be redirected to sign in page
 
-    Scenario: Product is out of stock, add to favorites
+    Scenario: Product is out of stock, add to wish list
         Given I am on the product details page of "laptop"
         And the product is out of stock
-        When I click on "add to favorites" button
-        And I click on "view my favorites" button
-        Then I should see the product added to my favorites list
-        And I should see a message "Product added to your favorites"
+        When I click on "add to wish list" button
+        And I click on "view my wish list" button
+        Then I should see the product added to my wish list
+        And I should see a message "Product added to your wishlist"
 
     Scenario: Removing all products from my cart
         Given I am on the view cart page

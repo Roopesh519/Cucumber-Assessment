@@ -314,8 +314,8 @@ Given('I am not signed in', async function(){
   assert.strictEqual(actualText, 'Sign In', `The user is not logged in`);
 });
 
-When('I click to add a product to favorites', async function(){
-  await driver.wait(until.elementLocated(By.css('[data-testid="add-to-my-favorites"]'))).click();
+When('I click to add a product to wish list', async function(){
+  await driver.wait(until.elementLocated(By.css('[data-testid="add-to-my-wish-list"]'))).click();
  });
 
  Then('I should be re-directed to sign in', async function(){
@@ -326,21 +326,21 @@ Given('the product is out of stock', async function(){
   this.outOfStockproductName = await driver.wait(until.elementLocated(By.css('[data-testid="product-name"]'))).getText();
   let status = await driver.wait(until.elementLocated(By.css('[data-testid="availability_of_productId"]'))).getText();
   assert.strictEqual(status, 'Out of Stock');
- });
+});
 
-Then('I should see the product added to my favorites list', async function(){
-  await driver.wait(until.urlContains('my_favorites'));
+Then('I should see the product added to my wish list', async function(){
+  await driver.wait(until.urlContains('my_wish_list'));
   await driver.wait(until.elementLocated(By.xpath(`//*[text()="Saved products"]`)));
  
-  let favorites = await driver.wait(until.elementsLocated(By.css('[data-testid="my-favorites-list"]')));
-  let favListNames = await Promise.all(favorites.map(item => item.getText()));
+  let wishList = await driver.wait(until.elementsLocated(By.css('[data-testid="my-wish-list"]')));
+  let wishListNames = await Promise.all(wishList.map(item => item.getText()));
  
-  if (favListNames.includes(this.outOfStockproductName))
+  if (wishListNames.includes(this.outOfStockproductName))
   return 'passed';
-  });
+});
  
-  Then('I should be redirected to home page', async function(){
-    await driver.wait(until.urlContains('home'));
-    let homePageText = await driver.wait(until.elementLocated(By.xpath(`//*[text()="Welcome to Our Home Page"]`)));
-    await driver.wait(until.elementIsVisible(homePageText));
-   });
+Then('I should be redirected to home page', async function(){
+  await driver.wait(until.urlContains('home'));
+  let homePageText = await driver.wait(until.elementLocated(By.xpath(`//*[text()="Welcome to Our Home Page"]`)));
+  await driver.wait(until.elementIsVisible(homePageText));
+});
