@@ -59,13 +59,22 @@ When('I click on {string} button', async function (button) {
               case 'apply_filter':
                   buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="apply_filter"]')));
                   break;
-        // this. something for custom button click 
               case 'add_to_cart':
                   buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="add_to_cart"]')));
                   break;
-
-                // add the code for view-my-wish-list
-
+              case 'delete_all_product':
+                  buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="delete_all_product"]')));
+                  break;
+              case 'go_to_shopping':
+                  buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="go_to_shopping"]')));
+                  break;
+              case 'view_my_wish_list':
+                  buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="view_my_wish_list"]')));
+                  break;
+              case 'add_to_wish_list':
+                  buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid="add_to_wish_list"]')));
+                  break;
+                // changes completed
               default:
                   console.log('Invalid button string');
                   return; 
@@ -82,7 +91,7 @@ When('I search with empty field'), async function(){
 }
 
 
-When('I select the price as {int} - {int}', async function(lessthan,greateryhan) {
+When('I select the price as {int} - {int}', async function(lessThan, greaterThan) {
   let select = await driver.wait(untill.elementLocated(By.css('[data-testid="price_dropdown"]')));
   await select.click();
   await driver.findElement(By.xpath("//option[. = '10000 - 20000']")).click();
@@ -101,8 +110,8 @@ When('I select the brand as asus', async function() {
 When('I select the screen-size as {int} inches', async function(inches) {
   let select = await driver.wait(untill.elementLocated(By.css('[data-testid="screensize_dropdown"]')));
   await select.click();
-  await driver.findElement(By.xpath("//option[. = '15 inches']")).click();
-  this.screensize = '15 inches';
+  await driver.findElement(By.xpath(`//option[. = '${inches} inches']`)).click();
+  this.screensize = `${inches} inches`;  
 });
 
 
@@ -137,20 +146,33 @@ Then('I should see a message {string}', async function (message) {
         let pageSource = await driver.getPageSource();
         let check = pageSource.includes(message); 
         if (check) {
-              return 'passed'
+              return 'passed' 
         }
       }
 });
 
 
 When('I click on a first product from results', async function (){
-  // get text name, price, desxrpition 
-        await driver.wait(until.elementLocated(By.css('[data-testid="search-results_1"]'))).click();
+  // changes made
+  let productName1 = await driver.wait(until.elementLocated(By.css('[data-testid="productName1"]'))).getText();
+  let productPrice1 = await driver.wait(until.elementLocated(By.css('[data-testid="productPrice1"]'))).getText();
+  let productDes1 = await driver.wait(until.elementLocated(By.css('[data-testid="productDes1"]'))).getText();
+  this.productName1 = productName1;
+  this.productPrice1 = productPrice1;
+  this.productDes1 = productDes1;      
+  await driver.wait(until.elementLocated(By.css('[data-testid="search-results_1"]'))).click();
 });
 
 
 Then('I should see the product details', async function () {
-  // assertion here
+  // changes made on assertion
+  let productName1 = await driver.wait(until.elementLocated(By.css('[data-testid="productName1"]'))).getText();
+  let productPrice1 = await driver.wait(until.elementLocated(By.css('[data-testid="productPrice1"]'))).getText();
+  let productDes1 = await driver.wait(until.elementLocated(By.css('[data-testid="productDes1"]'))).getText();
+  assert.strictEqual(this.productName1, productName1, `Expected product name to be ${this.productName1} but found ${productName1}`);
+  assert.strictEqual(this.productPrice1, productPrice1, `Expected product price to be ${this.productPrice1} but found ${productPrice1}`);
+  assert.strictEqual(this.productDes1, productDes1, `Expected product description to be ${this.productDes1} but found ${productDes1}`);
+
   let productDetails = await driver.wait(until.elementLocated(By.css('[data-testid="product-details"]')));
   let isVisible = await productDetails.isDisplayed();
   if (isVisible) {
@@ -191,7 +213,7 @@ When('I calculate the sum of the prices of all items in the cart', async functio
 
 
 Then('the displayed subtotal should match the calculated sum', async function () {
-  let subtotalElement = await driver.wait(until.elementLocate(By.css('[data-testid="subtotal"]')));
+  let subtotalElement = await driver.wait(until.elementLocated(By.css('[data-testid="subtotal"]')));
   let subtotalText = await subtotalElement.getText();
   let subtotal = parseFloat(subtotalText.replace(/[^0-9.]/g, ""));
   assert.strictEqual(subtotal, this.totalCalculatedSum, `The displayed subtotal (${subtotal}) does not match the calculated sum of item prices (${totalCalculatedSum}).`);
@@ -199,7 +221,7 @@ Then('the displayed subtotal should match the calculated sum', async function ()
 
 
 Then('I should see the subtotal of all items', async function () {
-  let subtotalElement = await driver.wait(until.elementsLocate(By.css('[data-testid="item_subtotal"]')));
+  let subtotalElement = await driver.wait(until.elementsLocated(By.css('[data-testid="item_subtotal"]')));
   let subtotal = await subtotalElement.getText();
   console.log(`The subtotal is: ${subtotal}`);
 });
@@ -335,13 +357,14 @@ When('I click to add a product to wish list', async function(){
 
 
  Then('I should be re-directed to sign in', async function(){
+  await driver.wait(until.urlContains('sign_in'));
   await driver.wait(until.elementLocated(By.xpath(`//*[text()="Sign In"]`)));
-  // assert url contains
+  // changes made on assert url contains
 });
 
 
 Given('the product is out of stock', async function(){
-  this.outOfStockproductName = await driver.wait(until.elementLocated(By.css('[data-testid="product-name"]'))).getText();
+  this.productname = await driver.wait(until.elementLocated(By.css('[data-testid="product-name"]'))).getText();
   let status = await driver.wait(until.elementLocated(By.css('[data-testid="availability_of_productId"]'))).getText();
   assert.strictEqual(status, 'Out of Stock');
 });
@@ -354,7 +377,7 @@ Then('I should see the product added to my wish list', async function(){
   let wishList = await driver.wait(until.elementsLocated(By.css('[data-testid="wishlistproductNames"]')));
   let wishListNames = await Promise.all(wishList.map(item => item.getText()));
  
-  if (wishListNames.includes(this.outOfStockproductName))
+  if (wishListNames.includes(this.productname))
   return 'passed';
 });
  
@@ -363,4 +386,9 @@ Then('I should be redirected to home page', async function(){
   await driver.wait(until.urlContains('home'));
   let homePageText = await driver.wait(until.elementLocated(By.xpath(`//*[text()="Welcome to Our Home Page"]`)));
   await driver.wait(until.elementIsVisible(homePageText));
+});
+
+
+When('I click on delete button for the first product', async function() {
+  await driver.wait(until.elementLocated(By.css('[data-testid="dlt_product1"]'))).click();
 });

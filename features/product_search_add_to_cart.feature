@@ -5,8 +5,8 @@ I want to search for a product and add it to cart
 
     Scenario Outline: Search for a Product
         Given I am on home page
-        When I enter a product name as "<Product>" into the search bar --- this
-        Then I should see a list of products that match the search query --- compare/assert
+        When I enter a product name as "<Product>" into the search bar   # changes made
+        Then I should see a list of products that match the search query # changes made
 
         Examples:
         | Product      |
@@ -51,11 +51,33 @@ I want to search for a product and add it to cart
         Then I should see a message "No results found"
 
 
-    Scenario: Cart is empty
+    Scenario: Cart is empty and Removing product from empty cart
         Given I am on the view cart page
         Then I should see a message "No products added yet into cart"
 
+    # Move to the top
+    # Scenario: Removing product from empty cart
+    #     Given I am on the view cart page
+    #     Then I should see a message "Your cart is empty"
 
+
+    # Move to top
+    Scenario: Adding a product to wish list when not signed in
+        Given I am on the product details page of "laptop"
+        And I am not signed in
+        When I click to add a product to wish list
+        Then I should be redirected to sign in page
+
+
+    # Move to top before adding to cart
+    Scenario: Removing all products from my cart
+        Given I am on the view cart page
+        When I click on "delete_all_product" button
+        Then I should see a message "Your cart is empty, Nothing to purchase"
+        When I click on "go_to_shopping" button
+        Then I should be redirected to home page
+
+        
     Scenario: Adding new product to the cart from home page
         Given I am on home page
         When I enter a product name as "phone" into the search bar
@@ -111,8 +133,8 @@ I want to search for a product and add it to cart
 
     Scenario Outline: Deleting items from the cart
         Given I am on the view cart page
-        When I click on delete button for the first item---------
-        Then I should see a message "Item removed successfully"
+        When I click on delete button for the first product
+        Then I should see a message "Product deleted successfully"
         And the total number of items should be decrease by one 
 
     # Product is out of stock
@@ -123,30 +145,13 @@ I want to search for a product and add it to cart
         When I click on "add_cart_button" for an out of stock product
         Then I should see a message "This product is currently out of stock"
 
-    # Move to the top
-    Scenario: Removing product from empty cart
-        Given I am on the view cart page
-        Then I should see a message "Your cart is empty"
     
-    # Move to top
-    Scenario: Adding a product to wish list when not signed in
-        Given I am on the product details page of "laptop"
-        And I am not signed in
-        When I click to add a product to wish list
-        Then I should be redirected to sign in page
-
     Scenario: Product is out of stock, add to wish list
         Given I am on the product details page of "laptop"
         And the product is out of stock
-        When I click on "add to wish list" button
+        When I click on "add_to_wish_list" button
         Then I should see a message "Product added to your wishlist"
-        When I click on "view my wish list" button
+        When I click on "view_my_wish_list" button
         Then I should see the product added to my wish list
 
-    # Move to top before adding to cart
-    Scenario: Removing all products from my cart
-        Given I am on the view cart page
-        When I click on "remove all products from my cart" button
-        Then I should see a message "Your cart is empty, Nothing to purchase"
-        When I click on "go back to shopping" button
-        Then I should be redirected to home page
+
