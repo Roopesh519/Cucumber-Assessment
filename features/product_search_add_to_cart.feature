@@ -5,8 +5,8 @@ I want to search for a product and add it to cart
 
     Scenario Outline: Search for a Product
         Given I am on home page
-        When I enter a product name as "<Product>" into the search bar   # changes made
-        Then I should see a list of products that match the search query # changes made
+        When I enter a product name as "<Product>" into the search bar   
+        Then I should see a list of products that match the search query
 
         Examples:
         | Product      |
@@ -33,7 +33,7 @@ I want to search for a product and add it to cart
         Given I am on home page
         When I enter a product name as "laptop" into the search bar
         Then I should see a message "Showing Results for laptop"
-        When I click on a first product from results
+        When I click on a product from results
         Then I should see the product details
 
 
@@ -68,21 +68,12 @@ I want to search for a product and add it to cart
         When I click to add a product to wish list
         Then I should be redirected to sign in page
 
-
-    # Move to top before adding to cart
-    Scenario: Removing all products from my cart
-        Given I am on the view cart page
-        When I click on "delete_all_product" button
-        Then I should see a message "Your cart is empty, Nothing to purchase"
-        When I click on "go_to_shopping" button
-        Then I should be redirected to home page
-
         
     Scenario: Adding new product to the cart from home page
         Given I am on home page
         When I enter a product name as "phone" into the search bar
         Then I should see a message "Showing result for Phone"
-        When I click on "add_to_cart" button for the first product 
+        When I click on "add_to_cart" button for the product 
         Then I should see a message "Item added to cart successfully"
         When I navigate to the view cart page
         Then I should see recently added product in the cart
@@ -102,7 +93,7 @@ I want to search for a product and add it to cart
 
     Scenario Outline: Updating item quantity in the cart
         Given I am on the view cart page
-        When I "<status>" quantity of first item
+        When I "<status>" quantity of item
         Then I should see the quantity of item "<status>" by one
 
         Examples:
@@ -133,7 +124,7 @@ I want to search for a product and add it to cart
 
     Scenario Outline: Deleting items from the cart
         Given I am on the view cart page
-        When I click on delete button for the first product
+        When I click on delete button for the product
         Then I should see a message "Product deleted successfully"
         And the total number of items should be decrease by one 
 
@@ -153,5 +144,13 @@ I want to search for a product and add it to cart
         Then I should see a message "Product added to your wishlist"
         When I click on "view_my_wish_list" button
         Then I should see the product added to my wish list
+
+
+    Scenario: Removing all products from my cart
+        Given I am on the view cart page
+        When I click on "delete_all_product" button
+        Then I should see a message "Your cart is empty, Nothing to purchase"
+        When I click on "go_to_shopping" button
+        Then I should be redirected to home page
 
 

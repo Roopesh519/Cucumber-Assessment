@@ -145,14 +145,12 @@ Then('I should see a message {string}', async function (message) {
         await driver.manage().setTimeouts({ pageLoad: 300 });
         let pageSource = await driver.getPageSource();
         let check = pageSource.includes(message); 
-        if (check) {
-              return 'passed' 
-        }
+        assert.ok(check, 'passed');
       }
 });
 
 
-When('I click on a first product from results', async function (){
+When('I click on a product from results', async function (){
   // changes made
   let productName1 = await driver.wait(until.elementLocated(By.css('[data-testid="productName1"]'))).getText();
   let productPrice1 = await driver.wait(until.elementLocated(By.css('[data-testid="productPrice1"]'))).getText();
@@ -226,6 +224,15 @@ Then('the displayed subtotal should match the calculated sum', async function ()
 Then('I should see the subtotal of all items', async function () {
   let subtotalElement = await driver.wait(until.elementsLocated(By.css('[data-testid="item_subtotal"]')));
   let subtotal = await subtotalElement.getText();
+  await Promise.all(priceElements.map(async (priceElement) => {
+    let priceText = await priceElement.getText().trim();
+    if (priceText === '') {
+        throw new Error('Price element is empty');
+    }
+    let price = parseFloat(priceText.replace(/[^0-9.]/g, ""));
+    this.totalCalculatedSum += price;
+  }));
+  // here
   console.log(`The subtotal is: ${subtotal}`);
 });
 
@@ -244,8 +251,14 @@ Then('the total number of items should be decrease by one', async function () {
 });
 
 
-Then('I should see quantity of {string} {string} by one', async function (status) {
-  let currentItemQuantity = await driver.wait(until.elementLocated(By.id(`${item}_quantity`))).getText();
+When('I {string} quantity of item', async function(status) {
+  let button = await driver.wait(until.elementLocated(By.css(`product1_${status}`)));
+  await button.click();
+});
+
+
+Then('I should see the quantity of item {string} by one', async function (status) {
+  let currentItemQuantity = await driver.wait(until.elementLocated(By.id(`product1_quantity`))).getText();
   currentItemQuantity = Number(currentItemQuantity);
   switch (status) {
     case 'increase':
@@ -261,14 +274,7 @@ Then('I should see quantity of {string} {string} by one', async function (status
 });
 
 
-When('I click on the {string} button of item {string}', async function (buttonName, itemName) {
-
-  let button = await driver.wait(until.elementLocated(By.css(`${itemName}_${buttonName}`)));
-  await button.click();
-});
-
-
-When('I click on {string} button for the first product', async function (addToCart1) {
+When('I click on {string} button for the product', async function (addToCart1) {
   for (let loop = 100; loop > 0; loop--) {
     await driver.manage().setTimeouts({ pageLoad: 300 });
     let pageSource = await driver.getPageSource();
@@ -325,9 +331,7 @@ Given('the product {string} is out of stock', async function (productName) {
   let productStatus = await driver.wait(until.elementLocated(By.id('product-status')));
   let statusText = await productStatus.getText();
 
-  if (statusText === 'Out of stock') {
-      return 'passed'
-  }
+  assert.ok(statusText !== 'Out of stock', 'Status is not "Out of stock"');
 });
 
 
@@ -380,8 +384,8 @@ Then('I should see the product added to my wish list', async function(){
   let wishList = await driver.wait(until.elementsLocated(By.css('[data-testid="wishlistproductNames"]')));
   let wishListNames = await Promise.all(wishList.map(item => item.getText()));
  
-  if (wishListNames.includes(this.productname))
-  return 'passed';
+  assert.ok(wishListNames.includes(this.productname))
+
 });
  
 
@@ -392,6 +396,6 @@ Then('I should be redirected to home page', async function(){
 });
 
 
-When('I click on delete button for the first product', async function() {
+When('I click on delete button for the product', async function() {
   await driver.wait(until.elementLocated(By.css('[data-testid="dlt_product1"]'))).click();
 });
