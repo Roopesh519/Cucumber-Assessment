@@ -55,13 +55,7 @@ I want to search for a product and add it to cart
         Given I am on the view cart page
         Then I should see a message "No products added yet into cart"
 
-    # Move to the top
-    # Scenario: Removing product from empty cart
-    #     Given I am on the view cart page
-    #     Then I should see a message "Your cart is empty"
 
-
-    # Move to top
     Scenario: Adding a product to wish list when not signed in
         Given I am on the product details page of "laptop"
         And I am not signed in
