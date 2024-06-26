@@ -92,10 +92,10 @@ When('I search with empty field'), async function(){
 
 
 When('I select the price as {int} - {int}', async function(lessThan, greaterThan) {
-  let select = await driver.wait(untill.elementLocated(By.css('[data-testid="price_dropdown"]')));
+  let select = await driver.wait(until.elementLocated(By.css('[data-testid="price_dropdown"]')));
   await select.click();
-  await driver.findElement(By.xpath("//option[. = '10000 - 20000']")).click();
-  this.price = ['10000', '20000']; // Store price as a range
+  await driver.findElement(By.xpath(`//option[. = '${lessThan} - ${greaterThan}']`)).click();
+  this.price = [`${lessThan}`, `${greaterThan}`]; // Store price as a range
 });
 
 
