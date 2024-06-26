@@ -189,8 +189,6 @@ Given('I am on the view cart page', async function () {
   await driver.wait(until.elementLocated(By.xpath('//*[text()="Shopping Cart"]')));
   let subtotalText = await driver.wait(until.elementLocated(By.id('total-items'))).getText();
   global.initialTotalItems = Number(subtotalText);
-
-  // ----
 });
 
 
