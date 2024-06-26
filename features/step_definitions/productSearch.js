@@ -201,14 +201,19 @@ When('I navigate to the view cart page', async function () {
 });
 
 
+// changes made
 When('I calculate the sum of the prices of all items in the cart', async function () {
   let priceElements = await driver.wait(until.elementsLocated(By.css('[data-testid="item_subtotal"]')));
   this.totalCalculatedSum = 0;
-  for (let priceElement of priceElements) {
-      let priceText = await priceElement.getText();
-      let price = parseFloat(priceText.replace(/[^0-9.]/g, ""));
-      this.totalCalculatedSum += price;
-  }
+
+  await Promise.all(priceElements.map(async (priceElement) => {
+    let priceText = await priceElement.getText().trim();
+    if (priceText === '') {
+        throw new Error('Price element is empty');
+    }
+    let price = parseFloat(priceText.replace(/[^0-9.]/g, ""));
+    this.totalCalculatedSum += price;
+}));
 });
 
 
