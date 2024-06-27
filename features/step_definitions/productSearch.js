@@ -2,6 +2,7 @@ const assert = require('assert');
 const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
 const { By, Key, Builder, until, Select} = require('selenium-webdriver')
 const assert = require('assert');
+const fetch = require('node-fetch');
 const faker  = require('faker');
 
 const axios = require('axios');
@@ -398,4 +399,89 @@ Then('I should be redirected to home page', async function(){
 
 When('I click on delete button for the product', async function() {
   await driver.wait(until.elementLocated(By.css('[data-testid="dlt_product1"]'))).click();
+});
+
+
+// -------------------------------------------------
+
+const { Given, When, Then } = require('@cucumber/cucumber');
+const fetch = require('node-fetch');
+const assert = require('assert');
+
+global.productPayload = {
+  name: 'test',
+  price: 323,
+  brand: 'asus'
+};
+
+global.productIds = [];
+let productList;
+
+const apiUrl = 'https://api.example.com/products';
+const headers = {
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
+};
+
+Given('I have a product payload', function () {
+  assert.ok(global.productPayload);
+});
+
+When('I create a product', async function () {
+  const response = await fetch(apiUrl, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(global.productPayload)
+  });
+  const data = await response.json();
+  
+  assert.strictEqual(data.data.message, 'product created successfully');
+  assert.strictEqual(data.data.success_status, true);
+  
+  global.productIds.push(data.data._id);
+});
+
+When('I navigate to the product section', async function () {
+  const response = await fetch(apiUrl, {
+    method: 'GET',
+    headers: headers
+  });
+  productList = await response.json();
+});
+
+Then('products should be listed', function () {
+  assert.ok(productList.length > 0, 'Product listing should not be empty');
+});
+
+Then('the product details should be correct', function () {
+  const lastCreatedProductId = global.productIds[global.productIds.length - 1];
+  const viewedProduct = productList.find(product => product._id === lastCreatedProductId);
+  
+  assert.strictEqual(viewedProduct.name, global.productPayload.name);
+  assert.strictEqual(viewedProduct.price, global.productPayload.price);
+  assert.strictEqual(viewedProduct.brand, global.productPayload.brand);
+});
+
+When('I delete the product', async function () {
+  const lastCreatedProductId = global.productIds.pop();
+  const deleteUrl = `${apiUrl}/${lastCreatedProductId}`;
+  const response = await fetch(deleteUrl, {
+    method: 'DELETE',
+    headers: headers
+  });
+  const data = await response.json();
+  
+  assert.strictEqual(data.success_status, true);
+});
+
+Then('the product should be deleted successfully', async function () {
+  const lastCreatedProductId = global.productIds[global.productIds.length - 1];
+  const response = await fetch(apiUrl, {
+    method: 'GET',
+    headers: headers
+  });
+  productList = await response.json();
+  
+  const productExists = productList.some(product => product._id === lastCreatedProductId);
+  assert.strictEqual(productExists, false, `Product with ID ${lastCreatedProductId} should not be present in the listing`);
 });

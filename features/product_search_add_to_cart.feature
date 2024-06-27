@@ -148,3 +148,14 @@ I want to search for a product and add it to cart
         Then I should be redirected to home page
 
 
+#Post and delete
+
+Scenario: Manage products
+    Given I have a product payload
+    When I create a product
+    And I navigate to the product section
+    Then products should be listed
+    And the product details should be correct
+
+    When I delete the product
+    Then the product should be deleted successfully
