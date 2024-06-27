@@ -414,7 +414,7 @@ let productList;
 const apiUrl = 'https://api.example.com/products';
 const headers = {
   'Content-Type': 'application/json',
-  'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
+  'Authorization': 'gy6rr5ddtsydr75667vgy8uhnh97'  //random access key
 };
 
 Given('I have a product payload', function () {

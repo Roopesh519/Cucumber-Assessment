@@ -1,4 +1,4 @@
-Feature: Password Reset
+Feature: Password reset
   As a user
   I want to be able to reset my password
   So that I can regain access to my account
@@ -32,9 +32,9 @@ Feature: Password Reset
     Then I should see an error message "<message>"
 
     Examples:
-      | new_password | confirm_new_password | message                                       | 
-      | Admin@123    | admin@1234           | password does not match                       |
-      | Raj@1234     | Raja@1234            | password does not match                       |
+      | new_password | confirm_new_password | message                                        | 
+      | Admin@123    | admin@1234           | password does not match                        |
+      | Raj@1234     | Raja@1234            | password does not match                        |
       | Mahesh854    | Mahesh854            | password requires at least 1 special character |
       | @Rajkumar    | @Rajkumar            | Password requires at least 1 number            |
       | swasthik@345 | swasthik@345         | Password requires at least 1 uppercase letter  | 
@@ -59,7 +59,7 @@ Feature: Password Reset
       | email             | password   | message                          |
       | admin@gmail.com   | admin@123  | Invalid credentials              |   #incorrect password
       | pratham@7edge.com | pratham@123| Invalid credentials              |   #incorrect Email
-      | prathvi@7edge.com| prathvi@123| Invalid credentials              |   #email doesn't exist
+      | prathvi@7edge.com | prathvi@123| Invalid credentials              |   #email doesn't exist
       | ram@yahoo.com     | ram@123    | Invalid credentials              |   #unregistered email
       |                   | ram@123    | required field                   |
       | ram@yahoo.com     |            | required field                   |
