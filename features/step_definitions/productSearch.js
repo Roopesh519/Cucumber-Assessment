@@ -12,7 +12,7 @@ let product_detail;
 
 Before('@get_product_detais', async function(productName){
 
-    let response = await axios.get(`https://amazon.in/${productName}`, {
+    let response = await axios.get(`https://localhost:3000/${productName}`, {
         params: {
             product_name: 'asus tuf a15',
         }
@@ -22,7 +22,7 @@ Before('@get_product_detais', async function(productName){
 
 
 Given('I am on home page', async function () {
-    await driver.get('https://www.amazon.in/home');
+    await driver.get('https://localhost:3000/home');
     await new Promise(resolve => setTimeout(resolve, 500));
     await driver.wait(until.elementLocated(By.xpath('//*[text()="Home"]')));
 });
@@ -183,7 +183,7 @@ Then('I should see the product details', async function () {
 
 
 Given('I am on the view cart page', async function () {
-  await driver.get('https://www.amazon.in/gp/cart/view.html');
+  await driver.get('https://localhost:3000/gp/cart/view.html');
   await new Promise(resolve => setTimeout(resolve, 500));
   await driver.wait(until.elementLocated(By.xpath('//*[text()="Shopping Cart"]')));
   let subtotalText = await driver.wait(until.elementLocated(By.id('total-items'))).getText();
@@ -192,7 +192,7 @@ Given('I am on the view cart page', async function () {
 
 
 When('I navigate to the view cart page', async function () {
-  await driver.get('https://www.amazon.in/gp/cart/view.html');
+  await driver.get('https://localhost:3000/gp/cart/view.html');
   await new Promise(resolve => setTimeout(resolve, 500));
   await driver.wait(until.elementLocated(By.xpath('//*[text()="Shopping Cart"]')));
 });
@@ -404,9 +404,6 @@ When('I click on delete button for the product', async function() {
 
 // -------------------------------------------------
 
-const { Given, When, Then } = require('@cucumber/cucumber');
-const fetch = require('node-fetch');
-const assert = require('assert');
 
 global.productPayload = {
   name: 'test',
@@ -420,7 +417,7 @@ let productList;
 const apiUrl = 'https://api.example.com/products';
 const headers = {
   'Content-Type': 'application/json',
-  'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
+  'Authorization': 'gyut6tuygut67rfr6io7i7oit7676' // random key
 };
 
 Given('I have a product payload', function () {
