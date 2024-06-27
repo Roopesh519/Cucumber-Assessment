@@ -404,7 +404,6 @@ When('I click on delete button for the product', async function() {
 
 // -------------------------------------------------
 
-
 global.productPayload = {
   name: 'test',
   price: 323,
@@ -417,7 +416,7 @@ let productList;
 const apiUrl = 'https://api.example.com/products';
 const headers = {
   'Content-Type': 'application/json',
-  'Authorization': 'gyut6tuygut67rfr6io7i7oit7676' // random key
+  'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
 };
 
 Given('I have a product payload', function () {
@@ -425,25 +424,28 @@ Given('I have a product payload', function () {
 });
 
 When('I create a product', async function () {
-  const response = await fetch(apiUrl, {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify(global.productPayload)
-  });
-  const data = await response.json();
-  
-  assert.strictEqual(data.data.message, 'product created successfully');
-  assert.strictEqual(data.data.success_status, true);
-  
-  global.productIds.push(data.data._id);
+  try {
+    const response = await axios.post(apiUrl, global.productPayload, { headers });
+    const data = response.data;
+    
+    assert.strictEqual(data.data.message, 'product created successfully');
+    assert.strictEqual(data.data.success_status, true);
+    
+    global.productIds.push(data.data._id);
+  } catch (error) {
+    console.error('Error creating product:', error);
+    throw error; 
+  }
 });
 
 When('I navigate to the product section', async function () {
-  const response = await fetch(apiUrl, {
-    method: 'GET',
-    headers: headers
-  });
-  productList = await response.json();
+  try {
+    const response = await axios.get(apiUrl, { headers });
+    productList = response.data;
+  } catch (error) {
+    console.error('Error fetching product list:', error);
+    throw error; 
+  }
 });
 
 Then('products should be listed', function () {
@@ -460,25 +462,32 @@ Then('the product details should be correct', function () {
 });
 
 When('I delete the product', async function () {
-  const lastCreatedProductId = global.productIds.pop();
-  const deleteUrl = `${apiUrl}/${lastCreatedProductId}`;
-  const response = await fetch(deleteUrl, {
-    method: 'DELETE',
-    headers: headers
-  });
-  const data = await response.json();
-  
-  assert.strictEqual(data.success_status, true);
+  try {
+    const lastCreatedProductId = global.productIds.pop();
+    const deleteUrl = `${apiUrl}/${lastCreatedProductId}`;
+    const response = await axios.delete(deleteUrl, { headers });
+    const data = response.data;
+    
+    assert.strictEqual(data.success_status, true);
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    throw error; 
+  }
 });
 
 Then('the product should be deleted successfully', async function () {
-  const lastCreatedProductId = global.productIds[global.productIds.length - 1];
-  const response = await fetch(apiUrl, {
-    method: 'GET',
-    headers: headers
-  });
-  productList = await response.json();
-  
-  const productExists = productList.some(product => product._id === lastCreatedProductId);
-  assert.strictEqual(productExists, false, `Product with ID ${lastCreatedProductId} should not be present in the listing`);
+  try {
+    const lastCreatedProductId = global.productIds[global.productIds.length - 1];
+    const response = await axios.get(apiUrl, { headers });
+    productList = response.data;
+    
+    const productExists = productList.some(product => product._id === lastCreatedProductId);
+    assert.strictEqual(productExists, false, `Product with ID ${lastCreatedProductId} should not be present in the listing`);
+  } catch (error) {
+    console.error('Error verifying deletion:', error);
+    throw error; 
+  }
 });
+
+
+//--------------------------------------------------
