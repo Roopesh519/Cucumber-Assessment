@@ -2,6 +2,42 @@ Feature: Product Search and Add to cart
 As user
 I want to search for a product and add it to cart
 
+    # Unhappy paths
+
+    Scenario: User performs an empty search
+        Given I am on home page
+        When I search with empty field
+        Then I should see a message "Please enter a product name"
+
+
+    Scenario: Search for a Product with No Results Found
+        Given I am on home page
+        When I enter a product name as "nonexistent_product" into the search bar
+        Then I should see a message "No results found"
+
+
+    Scenario: Cart is empty and Removing product from empty cart
+        Given I am on the view cart page
+        Then I should see a message "No products added yet into cart"
+
+
+    @get_product_details
+    Scenario: Attempt to Add Out of Stock Product to Cart
+        Given I am on the product details page of "laptop"
+        When I click on "add_cart_button" for an out of stock product
+        Then I should see a message "This product is currently out of stock"
+
+
+    Scenario: Product is out of stock, add to wish list
+        Given I am on the product details page of "laptop"
+        And the product is out of stock
+        When I click on "add_to_wish_list" button
+        Then I should see a message "Product added to your wishlist"
+        When I click on "view_my_wish_list" button
+        Then I should see the product added to my wish list
+
+
+    # Happy paths
 
     Scenario Outline: Search for a Product
         Given I am on home page
@@ -27,8 +63,8 @@ I want to search for a product and add it to cart
         And I click on "apply_filter" button
         Then I should see a message "Filter Applied Successfully"
         And I should see the products with filters applied
-   
-   
+
+
     Scenario: Viewing product details
         Given I am on home page
         When I enter a product name as "laptop" into the search bar
@@ -37,32 +73,13 @@ I want to search for a product and add it to cart
         Then I should see the product details
 
 
-    Scenario: User performs an empty search
-        Given I am on home page
-        When I search with empty field
-        Then I should see a message "Please enter a product name"
-
-
-    # Invalid product search
-
-    Scenario: Search for a Product with No Results Found
-        Given I am on home page
-        When I enter a product name as "nonexistent_product" into the search bar
-        Then I should see a message "No results found"
-
-
-    Scenario: Cart is empty and Removing product from empty cart
-        Given I am on the view cart page
-        Then I should see a message "No products added yet into cart"
-
-
     Scenario: Adding a product to wish list when not signed in
         Given I am on the product details page of "laptop"
         And I am not signed in
         When I click to add a product to wish list
         Then I should be redirected to sign in page
 
-        
+
     Scenario: Adding new product to the cart from home page
         Given I am on home page
         When I enter a product name as "phone" into the search bar
@@ -73,7 +90,7 @@ I want to search for a product and add it to cart
         Then I should see recently added product in the cart
 
 
-    @get_product_detais
+    @get_product_details    
     Scenario: Adding product to cart from Product details page
         Given I am on the product details page of "laptop"
         When I click on "add_to_cart" button 
@@ -116,28 +133,12 @@ I want to search for a product and add it to cart
         | Smartphone           |
         | Tablet, Speaker      |
 
+
     Scenario Outline: Deleting items from the cart
         Given I am on the view cart page
         When I click on delete button for the product
         Then I should see a message "Product deleted successfully"
         And the total number of items should be decrease by one 
-
-    # Product is out of stock
-    
-    @get_product_detais
-    Scenario: Attempt to Add Out of Stock Product to Cart
-        Given I am on the product details page of "laptop"
-        When I click on "add_cart_button" for an out of stock product
-        Then I should see a message "This product is currently out of stock"
-
-    
-    Scenario: Product is out of stock, add to wish list
-        Given I am on the product details page of "laptop"
-        And the product is out of stock
-        When I click on "add_to_wish_list" button
-        Then I should see a message "Product added to your wishlist"
-        When I click on "view_my_wish_list" button
-        Then I should see the product added to my wish list
 
 
     Scenario: Removing all products from my cart
@@ -147,15 +148,11 @@ I want to search for a product and add it to cart
         When I click on "go_to_shopping" button
         Then I should be redirected to home page
 
-
-#Post and delete
-
-Scenario: Manage products
-    Given I have a product payload
-    When I create a product
-    And I navigate to the product section
-    Then products should be listed
-    And the product details should be correct
-
-    When I delete the product
-    Then the product should be deleted successfully
+    Scenario: Manage products
+        Given I have a product payload
+        When I create a product
+        And I navigate to the product section
+        Then products should be listed
+        And the product details should be correct
+        When I delete the product
+        Then the product should be deleted successfully
