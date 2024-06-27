@@ -1,3 +1,250 @@
+
+global.productPayload = {
+  name: 'test',
+  price: 323,
+  brand: 'asus'
+};
+
+global.productIds = [];
+let productList;
+
+const apiUrl = 'https://api.example.com/products';
+const headers = {
+  'Content-Type': 'application/json',
+  'Authorization': 'gyut6tuygut67rfr6io7i7oit7676' // random key
+};
+
+Given('I have a product payload', function () {
+  assert.ok(global.productPayload);
+});
+
+When('I create a product', async function () {
+  const response = await fetch(apiUrl, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(global.productPayload)
+  });
+  const data = await response.json();
+  
+  assert.strictEqual(data.data.message, 'product created successfully');
+  assert.strictEqual(data.data.success_status, true);
+  
+  global.productIds.push(data.data._id);
+});
+
+When('I navigate to the product section', async function () {
+  const response = await fetch(apiUrl, {
+    method: 'GET',
+    headers: headers
+  });
+  productList = await response.json();
+});
+
+Then('products should be listed', function () {
+  assert.ok(productList.length > 0, 'Product listing should not be empty');
+});
+
+Then('the product details should be correct', function () {
+  const lastCreatedProductId = global.productIds[global.productIds.length - 1];
+  const viewedProduct = productList.find(product => product._id === lastCreatedProductId);
+  
+  assert.strictEqual(viewedProduct.name, global.productPayload.name);
+  assert.strictEqual(viewedProduct.price, global.productPayload.price);
+  assert.strictEqual(viewedProduct.brand, global.productPayload.brand);
+});
+
+When('I delete the product', async function () {
+  const lastCreatedProductId = global.productIds.pop();
+  const deleteUrl = `${apiUrl}/${lastCreatedProductId}`;
+  const response = await fetch(deleteUrl, {
+    method: 'DELETE',
+    headers: headers
+  });
+  const data = await response.json();
+  
+  assert.strictEqual(data.success_status, true);
+});
+
+Then('the product should be deleted successfully', async function () {
+  const lastCreatedProductId = global.productIds[global.productIds.length - 1];
+  const response = await fetch(apiUrl, {
+    method: 'GET',
+    headers: headers
+  });
+  productList = await response.json();
+  
+  const productExists = productList.some(product => product._id === lastCreatedProductId);
+  assert.strictEqual(productExists, false, `Product with ID ${lastCreatedProductId} should not be present in the listing`);
+});
+
+
+========================================================================================================
+Feature: Product Search and Add to cart
+As user
+I want to search for a product and add it to cart
+
+
+    Scenario Outline: Search for a Product
+        Given I am on home page
+        When I enter a product name as "<Product>" into the search bar   
+        Then I should see a list of products that match the search query
+
+        Examples:
+        | Product      |
+        | Laptop       |
+        | Headphones   |
+        | Smartphone   |
+        | Camera       |
+
+
+    Scenario: Filtering search results by price range and additional criteria
+        Given I am on home page
+        When I enter a product name as "laptop" into the search bar
+        And I click on "Filter" button
+        And I select the price as 10000 - 20000
+        And I select the brand as asus
+        And I select the screen-size as 15 inches
+        And I select the processor as intel i5
+        And I click on "apply_filter" button
+        Then I should see a message "Filter Applied Successfully"
+        And I should see the products with filters applied
+   
+   
+    Scenario: Viewing product details
+        Given I am on home page
+        When I enter a product name as "laptop" into the search bar
+        Then I should see a message "Showing Results for laptop"
+        When I click on a product from results
+        Then I should see the product details
+
+
+    Scenario: User performs an empty search
+        Given I am on home page
+        When I search with empty field
+        Then I should see a message "Please enter a product name"
+
+
+    # Invalid product search
+
+    Scenario: Search for a Product with No Results Found
+        Given I am on home page
+        When I enter a product name as "nonexistent_product" into the search bar
+        Then I should see a message "No results found"
+
+
+    Scenario: Cart is empty and Removing product from empty cart
+        Given I am on the view cart page
+        Then I should see a message "No products added yet into cart"
+
+
+    Scenario: Adding a product to wish list when not signed in
+        Given I am on the product details page of "laptop"
+        And I am not signed in
+        When I click to add a product to wish list
+        Then I should be redirected to sign in page
+
+        
+    Scenario: Adding new product to the cart from home page
+        Given I am on home page
+        When I enter a product name as "phone" into the search bar
+        Then I should see a message "Showing result for Phone"
+        When I click on "add_to_cart" button for the product 
+        Then I should see a message "Item added to cart successfully"
+        When I navigate to the view cart page
+        Then I should see recently added product in the cart
+
+
+    @get_product_detais
+    Scenario: Adding product to cart from Product details page
+        Given I am on the product details page of "laptop"
+        When I click on "add_to_cart" button 
+        Then I should see a message "Product added to cart Successfully"
+
+
+    Scenario: Verify the product added to cart from product detail page has been updated to cart 
+        Given I am on the view cart page
+        Then I should see recently added product in the cart
+
+
+    Scenario Outline: Updating item quantity in the cart
+        Given I am on the view cart page
+        When I "<status>" quantity of item
+        Then I should see the quantity of item "<status>" by one
+
+        Examples:
+        | status   |
+        | increase |
+        | decrease |
+        | increase |
+
+
+    Scenario: Verifying Subtotal on View Cart Page
+        Given I am on the view cart page
+        And I should see the subtotal of all items
+        When I calculate the sum of the prices of all items in the cart
+        Then the displayed subtotal should match the calculated sum
+
+
+    Scenario Outline: Display subtotal for selected items in cart
+        Given I am on the view cart page
+        Then I should see the subtotal of all items
+        When I select the checkbox of specific items "<SelectedItems>"
+        Then I should see the subtotal of only the selected items
+
+        Examples:
+        | SelectedItems        |
+        | Laptop, Headphones   |
+        | Smartphone           |
+        | Tablet, Speaker      |
+
+    Scenario Outline: Deleting items from the cart
+        Given I am on the view cart page
+        When I click on delete button for the product
+        Then I should see a message "Product deleted successfully"
+        And the total number of items should be decrease by one 
+
+    # Product is out of stock
+    
+    @get_product_detais
+    Scenario: Attempt to Add Out of Stock Product to Cart
+        Given I am on the product details page of "laptop"
+        When I click on "add_cart_button" for an out of stock product
+        Then I should see a message "This product is currently out of stock"
+
+    
+    Scenario: Product is out of stock, add to wish list
+        Given I am on the product details page of "laptop"
+        And the product is out of stock
+        When I click on "add_to_wish_list" button
+        Then I should see a message "Product added to your wishlist"
+        When I click on "view_my_wish_list" button
+        Then I should see the product added to my wish list
+
+
+    Scenario: Removing all products from my cart
+        Given I am on the view cart page
+        When I click on "delete_all_product" button
+        Then I should see a message "Your cart is empty, Nothing to purchase"
+        When I click on "go_to_shopping" button
+        Then I should be redirected to home page
+
+
+#Post and delete
+
+Scenario: Manage products
+    Given I have a product payload
+    When I create a product
+    And I navigate to the product section
+    Then products should be listed
+    And the product details should be correct
+
+    When I delete the product
+    Then the product should be deleted successfully
+
+
+
+-----------------------------------------------------------------
+------------------------------------------------------------------
 for i = 1 to 100
 
 let pageSource = await driver.getPageSource()
