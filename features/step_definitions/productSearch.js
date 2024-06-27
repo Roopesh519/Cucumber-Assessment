@@ -1,9 +1,7 @@
 const assert = require('assert'); 
-const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
+const { Before, Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
 const { By, Key, Builder, until, Select} = require('selenium-webdriver')
-const assert = require('assert');
-const fetch = require('node-fetch');
-const faker  = require('faker');
+const { faker } = require('@faker-js/faker');
 
 const axios = require('axios');
 const { error } = require('console');
@@ -84,12 +82,12 @@ When('I click on {string} button', async function (button) {
 });
 
 
-When('I search with empty field'), async function(){
+When('I search with empty field', async function(){
     let element = await driver.wait(until.elementLocated(By.css('[data-testid="search_bar"]')));
     await driver.wait(until.elementIsVisible(element))
     await element.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
     element.sendKeys(Key.ENTER);
-}
+});
 
 
 When('I select the price as {int} - {int}', async function(lessThan, greaterThan) {
@@ -337,7 +335,7 @@ Given('the product {string} is out of stock', async function (productName) {
 
 
 When('I click on {string} for an out of stock product', async function (addToCart) {
-  let addToCart = await driver.wait(until.elementLocated(By.id('addToCart'))).click();
+  await driver.wait(until.elementLocated(By.id('addToCart'))).click();
 });
 
 
