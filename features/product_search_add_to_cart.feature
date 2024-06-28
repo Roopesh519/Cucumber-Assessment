@@ -149,7 +149,7 @@ I want to search for a product and add it to cart
         Then I should be redirected to home page
 
     Scenario: Manage products
-        Given I have a product payload
+        Given I am on admin portal
         When I create a product
         And I navigate to the product section
         Then products should be listed

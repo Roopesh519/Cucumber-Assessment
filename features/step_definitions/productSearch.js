@@ -411,13 +411,14 @@ global.productPayload = {
 global.productIds = [];
 let productList;
 
-const apiUrl = 'https://api.example.com/products';
+const apiUrl = 'https://api.example.com/admin/products';
 const headers = {
   'Content-Type': 'application/json',
   'Authorization': 'gy6rr5ddtsydr75667vgy8uhnh97'  //random access key
 };
 
-Given('I have a product payload', function () {
+Given('I am on admin portal',async function () {
+  await driver.get('https://localhost:3000/admin');
   assert.ok(global.productPayload);
 });
 
