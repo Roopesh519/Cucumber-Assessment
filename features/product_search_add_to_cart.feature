@@ -1,6 +1,6 @@
 Feature: Product Search and Add to cart
-As user
-I want to search for a product and add it to cart
+    As user
+    I want to search for a product and add it to cart
 
     # Unhappy paths
 
@@ -41,15 +41,15 @@ I want to search for a product and add it to cart
 
     Scenario Outline: Search for a Product
         Given I am on home page
-        When I enter a product name as "<Product>" into the search bar   
+        When I enter a product name as "<Product>" into the search bar
         Then I should see a list of products that match the search query
 
         Examples:
-        | Product      |
-        | Laptop       |
-        | Headphones   |
-        | Smartphone   |
-        | Camera       |
+            | Product    |
+            | Laptop     |
+            | Headphones |
+            | Smartphone |
+            | Camera     |
 
 
     Scenario: Filtering search results by price range and additional criteria
@@ -84,20 +84,20 @@ I want to search for a product and add it to cart
         Given I am on home page
         When I enter a product name as "phone" into the search bar
         Then I should see a message "Showing result for Phone"
-        When I click on "add_to_cart" button for the product 
+        When I click on "add_to_cart" button for the product
         Then I should see a message "Item added to cart successfully"
         When I navigate to the view cart page
         Then I should see recently added product in the cart
 
 
-    @get_product_details    
+    @get_product_details
     Scenario: Adding product to cart from Product details page
         Given I am on the product details page of "laptop"
-        When I click on "add_to_cart" button 
+        When I click on "add_to_cart" button
         Then I should see a message "Product added to cart Successfully"
 
 
-    Scenario: Verify the product added to cart from product detail page has been updated to cart 
+    Scenario: Verify the product added to cart from product detail page has been updated to cart
         Given I am on the view cart page
         Then I should see recently added product in the cart
 
@@ -108,10 +108,10 @@ I want to search for a product and add it to cart
         Then I should see the quantity of item "<status>" by one
 
         Examples:
-        | status   |
-        | increase |
-        | decrease |
-        | increase |
+            | status   |
+            | increase |
+            | decrease |
+            | increase |
 
 
     Scenario: Verifying Subtotal on View Cart Page
@@ -128,17 +128,17 @@ I want to search for a product and add it to cart
         Then I should see the subtotal of only the selected items
 
         Examples:
-        | SelectedItems        |
-        | Laptop, Headphones   |
-        | Smartphone           |
-        | Tablet, Speaker      |
+            | SelectedItems      |
+            | Laptop, Headphones |
+            | Smartphone         |
+            | Tablet, Speaker    |
 
 
     Scenario Outline: Deleting items from the cart
         Given I am on the view cart page
         When I click on delete button for the product
         Then I should see a message "Product deleted successfully"
-        And the total number of items should be decrease by one 
+        And the total number of items should be decrease by one
 
 
     Scenario: Removing all products from my cart
@@ -148,11 +148,16 @@ I want to search for a product and add it to cart
         When I click on "go_to_shopping" button
         Then I should be redirected to home page
 
+    # http methods
+
+    @create_product
     Scenario: Manage products
         Given I am on admin portal
-        When I create a product
-        And I navigate to the product section
-        Then products should be listed
+        And I navigate to the product listing page
+        When I search product using serial number
+        Then product should be listed
         And the product details should be correct
+        When I navigate to view using product_id
+        Then the product details should match payload
         When I delete the product
         Then the product should be deleted successfully

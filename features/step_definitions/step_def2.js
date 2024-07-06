@@ -1,12 +1,12 @@
 const { Given, When, Then, Before, setDefaultTimeout } = require('@cucumber/cucumber');
 const { faker } = require('@faker-js/faker');
-const assert = require('assert'); 
+const assert = require('assert');
 
 const axios = require('axios');
 
 let forgot_password_link;
 
-Before(async function(){
+Before(async function () {
     let response = await axios.get('https://amazon/password?', {
         params: {
             email: "admin@gmail.com"
@@ -18,33 +18,33 @@ Before(async function(){
 
 
 Given('I am on the login screen', async function () {
-  await this.driver.get('https://example.com/login');
+    await this.driver.get('https://example.com/login');
 });
 
 
 Given('I am on the password reset screen', async function () {
-    await driver.get(global.forgot_password_link); 
+    await driver.get(global.forgot_password_link);
 });
 
 When("I click on {string} button", async function (button) {
-            let buttonElement;
-    
-            switch(button) {
-                case 'Forgot Password':
-                    buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid=Forgot_Password')));
-                    break;
-                case 'Reset Password':
-                    buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid=Reset_Password')));
-                    break;
-                default:
-                    console.log('Invalid button text');
-                    return; 
-            }
-            await buttonElement.click();
+    let buttonElement;
+
+    switch (button) {
+        case 'Forgot Password':
+            buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid=Forgot_Password')));
+            break;
+        case 'Reset Password':
+            buttonElement = await driver.wait(until.elementLocated(By.css('[data-testid=Reset_Password')));
+            break;
+        default:
+            console.log('Invalid button text');
+            return;
+    }
+    await buttonElement.click();
 });
 
 
-When('I enter my email as {string}', async function (invalid_email){
+When('I enter my email as {string}', async function (invalid_email) {
     let element = await driver.wait(until.elementLocated(By.css('[data-testid="email"]')))
     await driver.wait(until.elementIsVisible(element))
     await element.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.DELETE);
@@ -77,12 +77,12 @@ Then("I should see a message {string}", async function (message) {
     for (let loop = 100; loop > 0; loop--) {
         await driver.manage().setTimeouts({ pageLoad: 300 });
         let pageSource = await driver.getPageSource();
-        let check = pageSource.includes(message); 
+        let check = pageSource.includes(message);
         if (check) {
-              return 'passed'
+            return 'passed'
         }
-      }
-    });
+    }
+});
 
 
 Then('I should see a error message {string}', async function (messagePlaceholder) {
@@ -90,9 +90,9 @@ Then('I should see a error message {string}', async function (messagePlaceholder
     for (let loop = 100; loop > 0; loop--) {
         await driver.manage().setTimeouts({ pageLoad: 300 });
         let pageSource = await driver.getPageSource();
-        let check = pageSource.includes(message); 
+        let check = pageSource.includes(message);
         if (check) {
-              return 'passed'
+            return 'passed'
         }
-      }
-    });
+    }
+});
